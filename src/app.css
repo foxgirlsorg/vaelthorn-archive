@@ -1,0 +1,122 @@
+:root {
+  --bg: #0a0a0b;
+  --bg-raised: #101012;
+  --bg-panel: #0d0d0f;
+  --line: #232427;
+  --line-soft: #18191b;
+  --ink: #e8e8e6;
+  --ink-dim: #8e8f8d;
+  --ink-faint: #5c5d5c;
+  --accent: #de6161;
+  --accent-deep: #9c3f42;
+  --accent-pale: #f0a0a0;
+  --accent-soft: rgba(222, 97, 97, 0.1);
+  --font-sans: 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui,
+    -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Cascadia Mono', 'SF Mono', Consolas,
+    'Courier New', monospace;
+  --maxw: 1240px;
+  --cut: 10px; /* corner notch used on cards and panels */
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.is-locked {
+  overflow: hidden;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.28;
+  margin: 0;
+}
+
+a {
+  color: var(--ink);
+  text-underline-offset: 3px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent-deep);
+  color: #f2eaea;
+}
+
+.shell {
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.stamp {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.notch {
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut))
+  );
+}
+
+:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-faint);
+}
+
+@media (max-width: 640px) {
+  .shell {
+    padding: 0 18px;
+  }
+}

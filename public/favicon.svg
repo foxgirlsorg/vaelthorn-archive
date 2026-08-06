@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+    <title>Vaelthorn Archive</title>
+
+    <path
+            d="M7 4h13l5 5v19H7Z"
+            fill="none"
+            stroke="#0a0a0b"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+    />
+
+    <path d="M7 4h13l5 5v19H7Z" fill="#e8e8e6"/>
+    <path d="M20 4l5 5h-5Z" fill="#8e8f8d"/>
+
+    <rect x="10.5" y="12" width="11" height="1.8" fill="#0a0a0b" opacity="0.5"/>
+    <rect x="10.5" y="21.5" width="7.5" height="1.8" fill="#0a0a0b" opacity="0.5"/>
+
+    <rect x="4" y="16" width="24" height="3.6" fill="#de6161"/>
+</svg>
