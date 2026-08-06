@@ -11,19 +11,36 @@
   let tx = $state(0);
   let ty = $state(0);
   let dragging = $state(false);
-  let panelOpen = $state(window.innerWidth > 900);
   let copied = $state(false);
   let stage;
   let copyTimer;
 
+  // Below 900px the panel drops below the viewer; the stage is sized to
+  // 100dvh minus the toolbar so the image fills the screen and the details
+  // sit just off the bottom edge, reached by scrolling.
+  let mobile = $state(false);
+  let topbarH = $state(0);
+  let overlay;
+
   let start = { x: 0, y: 0, tx: 0, ty: 0 };
   let pinch = null;
 
-  // Reset the transform whenever the page or document changes.
+  $effect(() => {
+    const mq = window.matchMedia('(max-width: 900px)');
+    const sync = () => (mobile = mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  });
+
+  // Reset the transform whenever the page or document changes, and on mobile
+  // scroll back up to the image (a related link is clicked from the panel,
+  // which sits below the fold).
   $effect(() => {
     doc.id;
     page;
     reset();
+    if (overlay) overlay.scrollTop = 0;
   });
 
   function reset() {
@@ -164,12 +181,13 @@
 
 <div
   class="overlay"
+  bind:this={overlay}
   role="dialog"
   aria-modal="true"
   aria-label={doc.title}
   tabindex="-1"
 >
-  <div class="topbar">
+  <div class="topbar" bind:clientHeight={topbarH}>
     <div class="ident">
       <span class="stamp code">{doc.code}</span>
       <span class="title">{doc.title}</span>
@@ -182,11 +200,6 @@
       </div>
       <button class="tool" onclick={copyLink}>{copied ? 'Link copied' : 'Copy link'}</button>
       <a class="tool" href={doc.pages[page]} target="_blank" rel="noopener">Open original</a>
-      <button
-        class="tool toggle"
-        onclick={() => (panelOpen = !panelOpen)}
-        aria-pressed={panelOpen}>Details</button
-      >
     </div>
     <button class="tool close" onclick={onclose} aria-label="Close">
       <span class="x" aria-hidden="true">✕</span> close
@@ -196,6 +209,7 @@
   <div class="body">
     <div
       class="stage"
+      style={mobile ? `height: calc(100dvh - ${topbarH}px)` : undefined}
       bind:this={stage}
       class:grabbing={dragging}
       class:zoomed={scale > 1}
@@ -239,8 +253,7 @@
       {/if}
     </div>
 
-    {#if panelOpen}
-      <aside class="panel">
+    <aside class="panel">
         <p class="stamp code">{doc.code}</p>
         <h2>{doc.title}</h2>
         <p class="teaser">{doc.teaser}</p>
@@ -299,7 +312,6 @@
           turn pages · Esc to close
         </p>
       </aside>
-    {/if}
   </div>
 </div>
 
@@ -414,10 +426,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    touch-action: none;
+    /* At 1× let a single-finger drag scroll the page down to the details;
+       when zoomed we take over the gesture for panning. */
+    touch-action: pan-y;
   }
   .stage.zoomed {
     cursor: grab;
+    touch-action: none;
   }
   .stage.grabbing {
     cursor: grabbing;
@@ -600,21 +615,33 @@
     color: var(--ink-faint);
   }
   @media (max-width: 900px) {
-    /* Stack the panel under the image instead of beside it, so it never
-       covers the page controls. */
+    /* The viewer (toolbar + stage) fills the screen; the details flow below it
+       and the whole overlay scrolls. The stage height is set inline from the
+       measured toolbar height so the two together are exactly 100dvh. */
+    .overlay {
+      overflow-y: auto;
+    }
     .body {
+      flex: 0 0 auto;
       flex-direction: column;
     }
     .stage {
-      min-height: 0;
+      flex: 0 0 auto;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #060607;
     }
     .panel {
       width: auto;
       flex: 0 0 auto;
-      max-height: 46%;
+      max-height: none;
+      overflow: visible;
       border-left: none;
       border-top: 1px solid var(--line);
-      padding: 18px 18px 28px;
+      padding: 22px 18px 40px;
     }
     .ident .title {
       display: none;
@@ -659,8 +686,7 @@
       padding: 9px 16px;
     }
     .panel {
-      max-height: 50%;
-      padding: 16px 14px 24px;
+      padding: 20px 14px 32px;
     }
     .thumbs img {
       height: 62px;
