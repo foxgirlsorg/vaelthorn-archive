@@ -1,5 +1,6 @@
 <script>
   import { formatPublished } from './format.js';
+  import { isEmbed } from './data.js';
 
   let { doc, onopen } = $props();
 </script>
@@ -10,10 +11,24 @@
   </button>
 
   <div class="thumb">
-    <img src={doc.thumb} alt="" loading="lazy" />
+    {#if doc.thumb}
+      <!-- Preview image: a scan thumbnail, or one set on a web document. -->
+      <img src={doc.thumb} alt="" loading="lazy" />
+    {:else}
+      <!-- Web document with no preview image set. -->
+      <span class="placeholder" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="34" height="34">
+          <path d="M4 3h11l5 5v13H4Z" fill="none" stroke="currentColor" stroke-width="1.3" />
+          <path d="M15 3v5h5" fill="none" stroke="currentColor" stroke-width="1.3" />
+          <path d="M8 13h8M8 16h8M8 19h5" stroke="currentColor" stroke-width="1.3" />
+        </svg>
+      </span>
+    {/if}
     <span class="veil"></span>
     <span class="corner" aria-hidden="true"></span>
-    {#if doc.pages.length > 1}
+    {#if isEmbed(doc)}
+      <span class="pages stamp">WEB</span>
+    {:else if doc.pages.length > 1}
       <span class="pages stamp">{doc.pages.length}P</span>
     {/if}
   </div>
@@ -59,6 +74,24 @@
     aspect-ratio: 5 / 3;
     overflow: hidden;
     background: #0a0a0b;
+  }
+  .placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-faint);
+    background:
+      repeating-linear-gradient(
+        -45deg,
+        transparent 0 9px,
+        rgba(255, 255, 255, 0.02) 9px 10px
+      );
+  }
+  .card:hover .placeholder,
+  .card:focus-within .placeholder {
+    color: var(--accent);
   }
   .thumb img {
     width: 100%;

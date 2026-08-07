@@ -1,5 +1,5 @@
 <script>
-  import { categories, documents, documentsById } from './lib/data.js';
+  import { categories, documents, documentsById, pageCount } from './lib/data.js';
   import Nav from './lib/Nav.svelte';
   import Hero from './lib/Hero.svelte';
   import Filters from './lib/Filters.svelte';
@@ -63,7 +63,7 @@
     const url = new URL(window.location.href);
     if (openId) {
       url.searchParams.set('doc', openId);
-      if (documentsById[openId].pages.length > 1 && page > 0)
+      if (pageCount(documentsById[openId]) > 1 && page > 0)
         url.searchParams.set('page', String(page + 1));
       else url.searchParams.delete('page');
     } else {
@@ -98,7 +98,7 @@
       openId = id;
       const p = Number(params.get('page') ?? 1);
       page = Number.isFinite(p)
-        ? Math.min(Math.max(p - 1, 0), documentsById[id].pages.length - 1)
+        ? Math.min(Math.max(p - 1, 0), pageCount(documentsById[id]) - 1)
         : 0;
     } else {
       openId = null;

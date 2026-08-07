@@ -1,11 +1,13 @@
 <script>
-  import { documentsById, thumbFor } from './data.js';
+  import { documentsById, thumbFor, isEmbed, pageCount } from './data.js';
   import { formatPublished } from './format.js';
 
   let { doc, page = 0, onclose, onnavigate, onopen } = $props();
 
   const MIN = 1;
   const MAX = 6;
+
+  let embed = $derived(isEmbed(doc));
 
   let scale = $state(1);
   let tx = $state(0);
@@ -14,6 +16,22 @@
   let copied = $state(false);
   let stage;
   let copyTimer;
+
+  // Embed (HTML) documents: the iframe is sized to its own content height so
+  // it flows in the page and the overlay scrolls it as one continuous
+  // document — no internal iframe scrollbar, no page turning.
+  let frame;
+  let frameH = $state(0);
+
+  function measureFrame() {
+    try {
+      const d = frame.contentDocument;
+      if (d) frameH = d.documentElement.scrollHeight;
+    } catch {
+      // Cross-origin (shouldn't happen for local files) — fall back to CSS.
+      frameH = 0;
+    }
+  }
 
   // Below 900px the panel drops below the viewer; the stage is sized to
   // 100dvh minus the toolbar so the image fills the screen and the details
@@ -160,7 +178,7 @@
   async function copyLink() {
     const url = new URL(window.location.href);
     url.searchParams.set('doc', doc.id);
-    if (doc.pages.length > 1) url.searchParams.set('page', String(page + 1));
+    if (pageCount(doc) > 1) url.searchParams.set('page', String(page + 1));
     else url.searchParams.delete('page');
     try {
       await navigator.clipboard.writeText(url.toString());
@@ -177,7 +195,7 @@
   }
 </script>
 
-<svelte:window on:keydown={onKey} />
+<svelte:window on:keydown={onKey} on:resize={() => embed && measureFrame()} />
 
 <div
   class="overlay"
@@ -193,13 +211,15 @@
       <span class="title">{doc.title}</span>
     </div>
     <div class="tools">
-      <div class="zoomset">
-        <button title="Zoom out (−)" onclick={() => zoomTo(scale / 1.3)} aria-label="Zoom out">−</button>
-        <button class="lvl" title="Reset zoom (0)" onclick={reset}>{Math.round(scale * 100)}%</button>
-        <button title="Zoom in (+)" onclick={() => zoomTo(scale * 1.3)} aria-label="Zoom in">+</button>
-      </div>
+      {#if !embed}
+        <div class="zoomset">
+          <button title="Zoom out (−)" onclick={() => zoomTo(scale / 1.3)} aria-label="Zoom out">−</button>
+          <button class="lvl" title="Reset zoom (0)" onclick={reset}>{Math.round(scale * 100)}%</button>
+          <button title="Zoom in (+)" onclick={() => zoomTo(scale * 1.3)} aria-label="Zoom in">+</button>
+        </div>
+      {/if}
       <button class="tool" onclick={copyLink}>{copied ? 'Link copied' : 'Copy link'}</button>
-      <a class="tool" href={doc.pages[page]} target="_blank" rel="noopener">Open original</a>
+      <a class="tool" href={embed ? doc.embed : doc.pages[page]} target="_blank" rel="noopener">Open original</a>
     </div>
     <button class="tool close" onclick={onclose} aria-label="Close">
       <span class="x" aria-hidden="true">✕</span> close
@@ -207,51 +227,63 @@
   </div>
 
   <div class="body">
-    <div
-      class="stage"
-      style={mobile ? `height: calc(100dvh - ${topbarH}px)` : undefined}
-      bind:this={stage}
-      class:grabbing={dragging}
-      class:zoomed={scale > 1}
-      onwheel={onWheel}
-      onpointerdown={onPointerDown}
-      onpointermove={onPointerMove}
-      onpointerup={onPointerUp}
-      onpointercancel={onPointerUp}
-      ontouchstart={onTouchStart}
-      ontouchmove={onTouchMove}
-      ondblclick={onDoubleClick}
-      role="presentation"
-    >
-      <img
-        src={doc.pages[page]}
-        alt={`${doc.title} — page ${page + 1}`}
-        draggable="false"
-        style="transform: translate({tx}px, {ty}px) scale({scale});"
-      />
+    {#if embed}
+      <div class="stage embed">
+        <iframe
+          bind:this={frame}
+          src={doc.embed}
+          title={doc.title}
+          onload={measureFrame}
+          style={frameH ? `height: ${frameH}px` : undefined}
+        ></iframe>
+      </div>
+    {:else}
+      <div
+        class="stage"
+        style={mobile ? `height: calc(100dvh - ${topbarH}px)` : undefined}
+        bind:this={stage}
+        class:grabbing={dragging}
+        class:zoomed={scale > 1}
+        onwheel={onWheel}
+        onpointerdown={onPointerDown}
+        onpointermove={onPointerMove}
+        onpointerup={onPointerUp}
+        onpointercancel={onPointerUp}
+        ontouchstart={onTouchStart}
+        ontouchmove={onTouchMove}
+        ondblclick={onDoubleClick}
+        role="presentation"
+      >
+        <img
+          src={doc.pages[page]}
+          alt={`${doc.title} — page ${page + 1}`}
+          draggable="false"
+          style="transform: translate({tx}px, {ty}px) scale({scale});"
+        />
 
-      {#if doc.pages.length > 1}
-        <button
-          class="pager prev"
-          onclick={() => go(-1)}
-          disabled={page === 0}
-          aria-label="Previous page">‹</button
-        >
-        <button
-          class="pager next"
-          onclick={() => go(1)}
-          disabled={page === doc.pages.length - 1}
-          aria-label="Next page">›</button
-        >
-        <div class="pagebar">
-          <button onclick={() => go(-1)} disabled={page === 0}>‹ prev</button>
-          <span class="counter stamp">page {page + 1} / {doc.pages.length}</span>
-          <button onclick={() => go(1)} disabled={page === doc.pages.length - 1}
-            >next ›</button
+        {#if doc.pages.length > 1}
+          <button
+            class="pager prev"
+            onclick={() => go(-1)}
+            disabled={page === 0}
+            aria-label="Previous page">‹</button
           >
-        </div>
-      {/if}
-    </div>
+          <button
+            class="pager next"
+            onclick={() => go(1)}
+            disabled={page === doc.pages.length - 1}
+            aria-label="Next page">›</button
+          >
+          <div class="pagebar">
+            <button onclick={() => go(-1)} disabled={page === 0}>‹ prev</button>
+            <span class="counter stamp">page {page + 1} / {doc.pages.length}</span>
+            <button onclick={() => go(1)} disabled={page === doc.pages.length - 1}
+              >next ›</button
+            >
+          </div>
+        {/if}
+      </div>
+    {/if}
 
     <aside class="panel">
         <p class="stamp code">{doc.code}</p>
@@ -265,13 +297,18 @@
           <dd>{doc.originalDate}</dd>
           <dt>Date released</dt>
           <dd>{formatPublished(doc.published)}</dd>
-          <dt>Pages</dt>
-          <dd>{doc.pages.length}</dd>
+          {#if embed}
+            <dt>Format</dt>
+            <dd>Web document</dd>
+          {:else}
+            <dt>Pages</dt>
+            <dd>{doc.pages.length}</dd>
+          {/if}
           <dt>Classification</dt>
           <dd class="lifted">Declassified, cleared for release</dd>
         </dl>
 
-        {#if doc.pages.length > 1}
+        {#if !embed && doc.pages.length > 1}
           <div class="thumbs">
             {#each doc.pages as p, i}
               <button
@@ -308,8 +345,12 @@
         {/if}
 
         <p class="hint">
-          Scroll to zoom · drag to pan · double-click to toggle · arrow keys to
-          turn pages · Esc to close
+          {#if embed}
+            Scroll to read · Esc to close
+          {:else}
+            Scroll to zoom · drag to pan · double-click to toggle · arrow keys
+            to turn pages · Esc to close
+          {/if}
         </p>
       </aside>
   </div>
@@ -436,6 +477,21 @@
   }
   .stage.grabbing {
     cursor: grabbing;
+  }
+  /* Embed (HTML) documents: no zoom/pan, just a scrollable page. On desktop
+     the stage scrolls; on mobile the iframe flows and the overlay scrolls. */
+  .stage.embed {
+    display: block;
+    overflow-y: auto;
+    touch-action: auto;
+    background: #f3f1ec;
+  }
+  .stage.embed iframe {
+    display: block;
+    width: 100%;
+    height: 100dvh;
+    border: 0;
+    background: #f3f1ec;
   }
   .stage img {
     max-width: 94%;

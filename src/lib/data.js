@@ -200,9 +200,22 @@ export function thumbFor(page) {
   return page.replace('docs/', 'docs/thumbs/');
 }
 
+/** A document is either an image scan (`pages`) or an HTML page (`embed`). */
+export function isEmbed(doc) {
+  return !!doc.embed;
+}
+
+/** Turnable page count — embed (HTML) documents are a single scroll. */
+export function pageCount(doc) {
+  return doc.pages ? doc.pages.length : 1;
+}
+
 export const documents = documentList.map((doc) => ({
   ...doc,
-  thumb: doc.thumb || thumbFor(doc.pages[0])
+  // Card thumbnail: derived from the first scan, or an explicit `thumb`.
+  // Embed documents have no scan, so they need `thumb` set (else the card
+  // falls back to a placeholder tile).
+  thumb: doc.thumb || (doc.pages ? thumbFor(doc.pages[0]) : null)
 }));
 
 export const documentsById = Object.fromEntries(documents.map((d) => [d.id, d]));
