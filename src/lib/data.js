@@ -4,10 +4,24 @@ export const categories = [
   'Correspondence',
   'Dossiers',
   'Incident Records',
-  'Intercepts'
+  'Intercepts',
+  'News Articles'
 ];
 
 const documentList = [
+  {
+    id: 'irelyn-county-news',
+    code: 'LOCAL NEWS',
+    title: 'Explosion, Gunfire Reported Near Route 9 River Bridge | Ireyn Valley Courier',
+    category: 'News Articles',
+    embed: 'docs/ireyn_valley_courier_article/index.html',
+    thumb: 'docs/thumbs/ireyn_valley_courier_article.jpg',
+    originalDate: '2013-11-14',
+    published: '2026-08-07',
+    teaser:
+      'Suppressed by government order roughly 4 hours after publication. The Courier issued no retraction and never informed readers. Restored to the public record following the dissolution of the TPF Research and Detainment Division.',
+    related: []
+  },
   {
     id: 'decree-01',
     code: 'DECREE NO. 1',
