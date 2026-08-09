@@ -206,6 +206,20 @@ const documentList = [
       { id: 'dossier-aina' },
       { label: 'Illustration — the drive out', url: 'https://aibooru.online/posts/172298' }
     ]
+  },
+  {
+    id: 'record-379402-report',
+    code: 'RECORD NO. 379402',
+    title: 'After-Action Report — Armed Engagement at Route 9 River Bridge',
+    category: 'Incident Records',
+    pages: ['docs/record-379402-report-p1.jpg', 'docs/record-379402-report-p2.jpg'],
+    originalDate: '14 Nov 2013',
+    published: '2026-08-09',
+    teaser:
+        'TPF’s account of the Route 9 river bridge ambush. The report concludes that the attack was a deliberate interception and raises the possibility of an internal source providing the attackers with the shipment’s schedule.',
+    related: [
+      { id: 'irelyn-county-news' }
+    ]
   }
 ];
 
