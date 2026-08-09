@@ -16,6 +16,11 @@
         archive passed to this office.
       </p>
       <p>
+        This office also publishes material outside that transfer: records kept
+        by the Vaelthorn network itself, released with the consent of those named
+        in them. Such material was never part of the TPF's own archive.
+      </p>
+      <p>
         Files are cleared in batches and go online as review finishes, so this
         is not the whole archive.
       </p>
@@ -100,3 +105,4 @@
     }
   }
 </style>
+

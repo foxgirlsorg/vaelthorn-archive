@@ -220,6 +220,18 @@ const documentList = [
     related: [
       { id: 'irelyn-county-news' }
     ]
+  },
+  {
+    id: 'cc14-session-031-yue',
+    code: 'RECORD ID: CC14-2014-031-Y07',
+    title: 'Clinical Session Log — Yue, Session 31',
+    category: 'Vaelthorn Records',
+    pages: ['docs/cc14-session031-yue-p1.jpg','docs/cc14-session031-yue-p2.jpg','docs/cc14-session031-yue-p3.jpg'],
+    originalDate: '22 Mar 2014',
+    published: '2026-08-09',
+    teaser:
+        'A verbatim clinical session record from Vaelthorn’s Continuity Care Programme, documenting Session 31 with Yue on 22.03.2014. Published to the public archive at Yue’s request.',
+    related: []
   }
 ];
 
