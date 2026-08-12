@@ -232,7 +232,21 @@ const documentList = [
     teaser:
         'A verbatim clinical session record from Vaelthorn’s Continuity Care Programme, documenting Session 31 with Yue on 22.03.2014. Published to the public archive at Yue’s request.',
     related: []
-  }
+  },
+   {
+    id: 'lyne-journal-1513',
+    code: 'JOURNAL FRAGMENT',
+    title: 'Lyne\'s Journal Fragment',
+    category: 'Vaelthorn Records',
+    pages: ['docs/lyne-journal-1513-page-p1.jpg'],
+    originalDate: '12 Sep 1513',
+    published: '2026-08-12',
+    teaser:
+      'A private diary entry written by Lyne in the aftermath of Etharion’s fall. With the crown princess Elizabeth dead and the Purifying Flame claiming victory, Lyne resolves to stop running and begin building the network that will become Vaelthorn.',
+    related: [
+      { id: 'duval-letter' }
+    ]
+  },
 ];
 
 
