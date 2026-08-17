@@ -5,7 +5,8 @@ export const categories = [
   'Dossiers',
   'Incident Records',
   'Intercepts',
-  'News Articles'
+  'News Articles',
+  'Vaelthorn Records'
 ];
 
 const documentList = [
@@ -245,6 +246,64 @@ const documentList = [
       'A private diary entry written by Lyne in the aftermath of Etharion’s fall. With the crown princess Elizabeth dead and the Purifying Flame claiming victory, Lyne resolves to stop running and begin building the network that will become Vaelthorn.',
     related: [
       { id: 'duval-letter' }
+    ]
+  },
+  {
+    id: 'vaelthorn-operative-aina',
+    code: 'VNR·P·03',
+    title: 'Operative Record — Aina',
+    category: 'Vaelthorn Records',
+    pages: [
+      'docs/vaelthorn-operative-aina-p1.jpg',
+      'docs/vaelthorn-operative-aina-p2.jpg',
+      'docs/vaelthorn-operative-aina-p3.jpg'
+    ],
+    originalDate: 'Filed 2013–2024',
+    published: '2026-08-17',
+    teaser:
+      'Vaelthorn Network Internal personnel file for Aina. Released at her own allowance.',
+    related: [
+      { id: 'dossier-aina' },
+      { id: 'record-378241-attachment' }
+    ]
+  },
+  {
+    id: 'vaelthorn-operative-eimi',
+    code: 'VNR·P·02',
+    title: 'Operative Record — Eimi',
+    category: 'Vaelthorn Records',
+    pages: [
+      'docs/vaelthorn-operative-eimi-p1.jpg',
+      'docs/vaelthorn-operative-eimi-p2.jpg',
+      'docs/vaelthorn-operative-eimi-p3.jpg'
+    ],
+    originalDate: 'Filed 2015–2024',
+    published: '2026-08-17',
+    teaser:
+      'Vaelthorn Network Internal personnel file for Eimi. Released at her own allowance.',
+    related: [
+      { id: 'dossier-eimi' },
+      { id: 'vaelthorn-operative-yue' }
+    ]
+  },
+  {
+    id: 'vaelthorn-operative-yue',
+    code: 'VNR·P·01',
+    title: 'Operative Record — Yue',
+    category: 'Vaelthorn Records',
+    pages: [
+      'docs/vaelthorn-operative-yue-p1.jpg',
+      'docs/vaelthorn-operative-yue-p2.jpg',
+      'docs/vaelthorn-operative-yue-p3.jpg'
+    ],
+    originalDate: 'Filed 2015–2024',
+    published: '2026-08-17',
+    teaser:
+      'Vaelthorn Network Internal personnel file for Yue. Released at her own allowance.',
+    related: [
+      { id: 'dossier-yue' },
+      { id: 'vaelthorn-operative-eimi' },
+      { id: 'cc14-session-031-yue' }
     ]
   },
 ];
