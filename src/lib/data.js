@@ -159,12 +159,16 @@ const documentList = [
     originalDate: '26 Mar 2013',
     published: '2024-03-03',
     teaser:
-      "TPF's own account of the night Subjects 36 and 37 left the facility. 56 dead, 94 injured, no search parties dispatched.",
+      "TPF's own account of the night Subjects 36 and 37 left the facility.",
     related: [
       { id: 'dossier-eimi' },
       { id: 'dossier-yue' },
       { id: 'record-376015' },
       { id: 'record-378241-report' },
+      {
+          label: "Fab art — Yue's Indifference",
+          url: 'https://aibooru.online/posts/38957'
+       }
     ]
   },
   {
