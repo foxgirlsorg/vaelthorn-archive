@@ -166,7 +166,7 @@ const documentList = [
       { id: 'record-376015' },
       { id: 'record-378241-report' },
       {
-          label: "Fab art — Yue's Indifference",
+          label: "Fan art — Yue's Indifference",
           url: 'https://aibooru.online/posts/38957'
        }
     ]
