@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The People We Were Told Were Never Real | The Exile Press</title>
+<meta name="description" content="An eight-month investigation into the surviving non-human peoples of Esteloria, the state agency that hunts them, and the network that has been getting them out.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%230e0e11'/%3E%3Crect x='7' y='8' width='6' height='7' rx='1' fill='%23e4e2dd'/%3E%3Cpolygon points='7,15 13,15 7,20' fill='%23e4e2dd'/%3E%3Crect x='17' y='8' width='6' height='7' rx='1' fill='%23e4e2dd'/%3E%3Cpolygon points='17,15 23,15 17,20' fill='%23e4e2dd'/%3E%3Crect x='6' y='24' width='20' height='2.6' rx='1' fill='%23e05636'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e0e11;
+    --bg-1:#151518;
+    --bg-2:#1b1b1f;
+    --card:#151518;
+    --line:rgba(255,255,255,.08);
+    --line-soft:rgba(255,255,255,.05);
+    --ink:#e4e2dd;
+    --ink-dim:#a3a2a9;
+    --muted:#6b6b75;
+    --accent:#e05636;
+    --accent-2:#c9983f;
+    --accent-soft:rgba(224,86,54,.1);
+    --radius:5px;
+    --shell:70rem;
+    --col:40rem;
+    --rail:16.5rem;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Inter", system-ui, -apple-system, sans-serif;
+    font-size:14px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:rgba(224,86,54,.18); color:var(--ink); }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  h1,h2,h3,h4{ font-family:"Space Grotesk", system-ui, sans-serif; letter-spacing:-.01em; }
+  .mono{ font-family:"JetBrains Mono", ui-monospace, monospace; }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:3px; }
+  button{ font:inherit; }
+
+  ion-icon{ font-size:15px; flex:none; }
+  .skip{
+    position:absolute; left:-9999px; top:0; z-index:200;
+    background:var(--accent); color:#fff; padding:8px 14px; border-radius:var(--radius);
+    font-weight:600; text-decoration:none;
+  }
+  .skip:focus{ left:12px; top:12px; }
+
+  .shell{ max-width:var(--shell); margin:0 auto; padding:0 24px; width:100%; }
+
+  /* ══ header ══ */
+  .site-header{
+    position:sticky; top:0; z-index:60;
+    background:var(--bg);
+    border-bottom:1px solid var(--line);
+  }
+
+  /* utility strip */
+  .utility{
+    border-bottom:1px solid var(--line-soft);
+    overflow:hidden;
+    max-height:34px;
+    transition:max-height .2s ease, opacity .2s ease;
+  }
+  .utility-inner{
+    display:flex; align-items:center; gap:10px;
+    height:34px;
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--muted);
+    white-space:nowrap;
+  }
+  .utility .pipe{ width:1px; height:11px; background:var(--line); flex:none; }
+  .utility .live{ display:inline-flex; align-items:center; gap:6px; color:var(--ink-dim); }
+  .utility .dot{
+    width:5px; height:5px; border-radius:1px; background:#5fbf8f; flex:none;
+    animation:pulse 2.6s infinite;
+  }
+  @keyframes pulse{ 0%{opacity:1} 50%{opacity:.25} 100%{opacity:1} }
+  .utility-right{ margin-left:auto; display:flex; align-items:center; gap:16px; }
+  .utility-right a{
+    display:inline-flex; align-items:center; gap:5px;
+    text-decoration:none; color:var(--muted);
+  }
+  .utility-right a:hover{ color:var(--ink); }
+  .utility-right ion-icon{ font-size:13px; }
+
+  /* masthead */
+  .masthead-inner{
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:16px;
+    padding-top:13px; padding-bottom:13px;
+    transition:padding .2s ease;
+  }
+  .masthead-inner .sections-btn{ justify-self:start; }
+  .masthead-inner .account{ justify-self:end; }
+  .sections-btn{
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--bg-1); color:var(--ink-dim);
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:7px 12px 7px 10px; cursor:pointer;
+    font-weight:600; font-size:12px; letter-spacing:.01em;
+  }
+  .sections-btn:hover{ color:var(--ink); border-color:rgba(255,255,255,.16); }
+  .sections-btn ion-icon{ font-size:17px; }
+
+  .brand{
+    display:flex; align-items:center; gap:10px; text-decoration:none;
+  }
+  .brand svg{ display:block; flex:none; transition:width .2s ease, height .2s ease; }
+  .brand .word{
+    font-family:"Space Grotesk",sans-serif; font-weight:700;
+    font-size:19px; color:var(--ink); letter-spacing:-.025em;
+    transition:font-size .2s ease;
+  }
+  .brand .word em{ font-style:normal; color:var(--ink-dim); font-weight:500; }
+
+  .account{ display:flex; align-items:center; gap:8px; }
+  .icon-btn{
+    width:34px; height:34px; display:inline-flex; align-items:center; justify-content:center;
+    background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius);
+    color:var(--ink-dim); cursor:pointer;
+  }
+  .icon-btn:hover{ color:var(--ink); border-color:rgba(255,255,255,.16); }
+  .icon-btn ion-icon{ font-size:16px; }
+  .btn-ghost, .btn-solid{
+    display:inline-flex; align-items:center; gap:6px;
+    text-decoration:none; font-weight:600; font-size:12px;
+    padding:8px 13px; border-radius:var(--radius); white-space:nowrap;
+  }
+  .btn-ghost{ color:var(--ink-dim); border:1px solid var(--line); background:var(--bg-1); }
+  .btn-ghost:hover{ color:var(--ink); border-color:rgba(255,255,255,.16); }
+  .btn-solid{ color:#14100e; background:var(--accent); border:1px solid var(--accent); }
+  .btn-solid:hover{ opacity:.88; }
+
+  /* section nav */
+  .sections-bar{ border-top:1px solid var(--line-soft); }
+  .sections-inner{
+    display:flex; align-items:center; gap:22px;
+    height:40px; overflow-x:auto; scrollbar-width:none;
+  }
+  .sections-inner::-webkit-scrollbar{ display:none; }
+  .sections-inner a{
+    text-decoration:none; font-size:12.5px; font-weight:500; color:var(--ink-dim);
+    white-space:nowrap; height:100%; display:inline-flex; align-items:center;
+    border-bottom:2px solid transparent;
+  }
+  .sections-inner a:hover{ color:var(--ink); }
+  .sections-inner a.active{ color:var(--ink); border-bottom-color:var(--accent); }
+  .sections-inner .stamp{
+    margin-left:auto; padding-left:20px;
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--muted); white-space:nowrap;
+  }
+
+  /* progress bar overlays the nav */
+  .progress-track{ position:absolute; left:0; right:0; bottom:-1px; height:2px; background:transparent; z-index:5; }
+  .progress-fill{ height:100%; width:0%; background:var(--accent); transition:width .1s linear; }
+
+  /* compact on scroll */
+  .site-header.is-scrolled .utility{ max-height:0; opacity:0; border-bottom-color:transparent; }
+  .site-header.is-scrolled .masthead-inner{ padding-top:8px; padding-bottom:8px; }
+  .site-header.is-scrolled .brand .word{ font-size:16px; }
+  .site-header.is-scrolled .brand svg{ width:24px; height:24px; }
+
+  /* ══ menu panel ══ */
+  .menu-panel{
+    display:none; position:fixed; inset:0; z-index:90; background:var(--bg);
+    flex-direction:column; overflow-y:auto;
+  }
+  .menu-panel.open{ display:flex; }
+  .menu-top{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:16px 0; border-bottom:1px solid var(--line);
+  }
+  .menu-grid{
+    display:grid; grid-template-columns:1fr 1fr; gap:36px;
+    padding:32px 0 48px;
+  }
+  .menu-col h4{
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:10px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--accent-2);
+    margin:0 0 6px;
+  }
+  .menu-col a{
+    display:flex; align-items:center; gap:12px;
+    text-decoration:none; color:var(--ink);
+    font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:1.15rem;
+    padding:11px 0; border-bottom:1px solid var(--line-soft);
+  }
+  .menu-col a:hover{ color:var(--accent); }
+  .menu-col a ion-icon{ font-size:19px; color:var(--muted); }
+  .menu-col a:hover ion-icon{ color:var(--accent); }
+  .menu-col a .sub{
+    margin-left:auto; font-family:"JetBrains Mono",monospace; font-size:10px;
+    font-weight:400; color:var(--muted); letter-spacing:.03em;
+  }
+  .menu-account{ display:none; gap:8px; padding:4px 0 40px; }
+  .menu-account .btn-ghost, .menu-account .btn-solid{ flex:1; justify-content:center; padding:11px; font-size:13px; }
+
+  /* ══ alert strip ══ */
+  .alert-strip{ background:var(--bg-1); border-bottom:1px solid var(--line); }
+  .alert-inner{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding:9px 0;
+    font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted); line-height:1.6;
+  }
+  .alert-inner ion-icon{ color:var(--accent); font-size:14px; }
+  .alert-inner b{ color:var(--ink-dim); font-weight:600; }
+  .alert-inner .sep{ color:var(--line); }
+  .alert-inner a{ color:var(--accent-2); text-decoration:none; margin-left:auto; display:inline-flex; align-items:center; gap:4px; }
+  .alert-inner a:hover{ text-decoration:underline; }
+
+  /* ══ breadcrumb ══ */
+  .crumb{
+    display:flex; align-items:center; gap:6px;
+    padding:16px 0 0;
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.05em;
+    text-transform:uppercase; color:var(--muted);
+  }
+  .crumb a{ text-decoration:none; color:var(--accent-2); }
+  .crumb a:hover{ text-decoration:underline; }
+  .crumb ion-icon{ font-size:12px; }
+
+  /* ══ hero ══ */
+  .hero{ padding-top:14px; }
+  .hero-media{
+    position:relative; border-radius:var(--radius); overflow:hidden;
+    aspect-ratio:21/9; background:#141417; border:1px solid var(--line);
+  }
+  .hero-media img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:1; object-position:bottom; }
+  .ph-caption{
+    position:absolute; inset:0; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center; padding:24px; gap:2px;
+    font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted); line-height:1.7;
+  }
+  .ph-caption .tag{
+    display:inline-flex; align-items:center; gap:6px;
+    text-transform:uppercase; letter-spacing:.07em;
+    font-size:10px; color:var(--accent-2); font-weight:500; margin-bottom:6px;
+  }
+  .credit{
+    display:flex; gap:8px; align-items:baseline; flex-wrap:wrap;
+    font-size:11.5px; color:var(--muted); margin-top:8px;
+  }
+  .credit .src{ font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.04em; text-transform:uppercase; }
+
+  .headline-block{ padding-top:22px; max-width:52rem; }
+  .kicker{
+    display:inline-flex; align-items:center; gap:6px;
+    font-weight:600; font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:10px;
+  }
+  .kicker ion-icon{ font-size:13px; }
+  .headline-block h1{
+    font-size:clamp(1.9rem, 4.6vw, 3rem); line-height:1.08; font-weight:700;
+    color:var(--ink); margin:0 0 12px; max-width:20ch;
+  }
+  .headline-block .dek{
+    color:var(--ink-dim); font-size:clamp(.95rem, 1.6vw, 1.05rem);
+    max-width:58ch; line-height:1.55; margin:0;
+  }
+
+  /* ══ layout: article + rail ══ */
+  .layout{
+    display:grid; grid-template-columns:minmax(0,1fr) var(--rail);
+    gap:48px; align-items:start;
+    padding-top:26px; padding-bottom:10px;
+  }
+  .col-main{ min-width:0; }
+  .measure{ max-width:var(--col); }
+
+  /* byline */
+  .byline{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    font-size:12.5px; color:var(--ink-dim);
+    padding-bottom:14px; border-bottom:1px solid var(--line);
+  }
+  .byline .avatar{
+    width:32px; height:32px; border-radius:var(--radius); background:var(--bg-2);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:11px; color:var(--ink-dim);
+    font-family:"JetBrains Mono",monospace;
+  }
+  .byline b{ color:var(--ink); }
+  .byline .dot{ color:var(--line); }
+  .byline .meta{
+    display:flex; gap:14px; margin-left:auto; color:var(--muted);
+    font-family:"JetBrains Mono",monospace; font-size:11px;
+  }
+  .byline .meta span{ display:inline-flex; align-items:center; gap:5px; }
+
+  /* action row */
+  .actions{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    padding:14px 0 4px; border-bottom:1px solid var(--line-soft);
+  }
+  .act{
+    display:inline-flex; align-items:center; gap:6px;
+    font-weight:600; font-size:12px; color:var(--ink-dim);
+    background:var(--bg-1); border:1px solid var(--line);
+    padding:6px 11px; border-radius:var(--radius); text-decoration:none; cursor:pointer;
+    margin-bottom:10px;
+  }
+  .act:hover{ border-color:var(--accent); color:var(--ink); }
+  .act ion-icon{ font-size:14px; }
+  .act.only-icon{ padding:9px 8px; }
+
+  /* note */
+  .note{
+    display:flex; gap:10px;
+    border-left:2px solid var(--accent); padding:10px 16px; margin:22px 0;
+    font-size:12.5px; color:var(--ink-dim); line-height:1.6;
+  }
+  .note ion-icon{ color:var(--accent); font-size:16px; margin-top:2px; }
+  .note b{ color:var(--ink); }
+
+  /* body text */
+  .prose p{ font-size:15px; line-height:1.78; color:var(--ink-dim); margin:0 0 18px; }
+  .prose p b{ color:var(--ink); font-weight:600; }
+  .prose p.lede{ font-size:16.5px; color:var(--ink); line-height:1.7; }
+
+  /* findings */
+  .findings{ border-left:2px solid var(--accent-2); padding:14px 18px; margin:26px 0; }
+  .findings .label{
+    display:flex; align-items:center; gap:7px;
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:10px; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--accent-2); margin-bottom:10px;
+  }
+  .findings ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .findings li{ display:flex; gap:9px; font-size:13.5px; color:var(--ink-dim); line-height:1.55; }
+  .findings li ion-icon{ color:var(--muted); font-size:15px; margin-top:2px; }
+
+  /* pull quote */
+  .pull-quote{
+    font-weight:500; font-size:clamp(1.05rem,2.2vw,1.4rem); line-height:1.4; color:var(--ink);
+    border-left:2px solid var(--accent); padding:4px 0 4px 20px;
+    max-width:36ch; margin:36px 0;
+  }
+
+  /* section label */
+  .section-label{
+    display:flex; align-items:center; gap:10px;
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:11px; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--accent-2); margin:44px 0 18px;
+  }
+  .section-label ion-icon{ font-size:14px; }
+  .section-label::after{ content:""; flex:1; height:1px; background:var(--line); }
+
+  /* breakout figures */
+  .breakout{ margin:30px 0; }
+  .breakout .frame{
+    border-radius:var(--radius); overflow:hidden; border:1px solid var(--line);
+    background:#141417; aspect-ratio:3/1.4; position:relative;
+  }
+  .breakout .frame img{ width:100%; height:100%; object-fit:cover; position:relative; z-index:1; }
+  .breakout .frame.portrait{ aspect-ratio:3/4; max-width:340px; margin:0 auto; }
+  .breakout figcaption{
+    font-size:12px; color:var(--muted); margin:9px auto 0; max-width:52ch; text-align:center; line-height:1.6;
+  }
+
+  /* transcript */
+  .transcript{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:24px; margin:24px 0;
+  }
+  .transcript-head{ margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+  .transcript-head .tag{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--accent-2); margin-bottom:8px;
+  }
+  .transcript-head h2{ font-size:1.35rem; color:var(--ink); margin:0 0 5px; }
+  .transcript-head p{ font-size:12px; color:var(--muted); margin:0; line-height:1.6; }
+  .exchange{ padding:9px 0; }
+  .exchange + .exchange{ border-top:1px solid var(--line-soft); }
+  .speaker{
+    display:flex; align-items:center; gap:6px;
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:10px;
+    letter-spacing:.05em; text-transform:uppercase; margin-bottom:4px;
+  }
+  .speaker ion-icon{ font-size:12px; }
+  .exchange.q .speaker{ color:var(--muted); }
+  .exchange.a .speaker{ color:var(--accent); }
+  .exchange.q .msg{ font-size:13.5px; color:var(--ink-dim); }
+  .exchange.a .msg{ font-size:14.5px; color:var(--ink); line-height:1.68; }
+
+  /* verify */
+  .verify-card{
+    background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius);
+    padding:6px 20px 14px; margin:22px 0;
+  }
+  .verify-row{ display:flex; align-items:center; gap:12px; padding:12px 0; border-top:1px solid var(--line-soft); }
+  .verify-row:first-child{ border-top:0; }
+  .verify-row .name{
+    display:flex; align-items:center; gap:8px;
+    font-weight:600; font-size:13px; color:var(--ink); width:9.5rem; flex:none;
+  }
+  .verify-row .name ion-icon{ color:var(--muted); font-size:15px; }
+  .verify-row .vnote{ flex:1; font-size:12px; color:var(--muted); line-height:1.55; }
+  .status{
+    display:inline-flex; align-items:center; gap:5px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; font-weight:500; letter-spacing:.03em;
+    padding:4px 8px; border-radius:3px; flex:none; white-space:nowrap;
+  }
+  .status ion-icon{ font-size:12px; }
+  .status.ok{ background:rgba(95,191,143,.12); color:#5fbf8f; }
+  .status.warn{ background:rgba(224,176,78,.12); color:#d4a24e; }
+  .status.no{ background:rgba(255,255,255,.05); color:var(--muted); }
+
+  /* ══ rail ══ */
+  .rail{ position:sticky; top:112px; display:flex; flex-direction:column; gap:22px; }
+  .rail-block{ border-top:2px solid var(--accent); padding-top:12px; }
+  .rail-block h3{
+    display:flex; align-items:center; gap:7px;
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:10.5px;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--ink); margin:0 0 6px;
+  }
+  .rail-block h3 ion-icon{ color:var(--accent); font-size:13px; }
+  .most-read{ list-style:none; margin:0; padding:0; }
+  .most-read li{ border-top:1px solid var(--line-soft); }
+  .most-read li:first-child{ border-top:0; }
+  .most-read a{ display:flex; gap:10px; padding:10px 0; text-decoration:none; }
+  .most-read .n{
+    font-family:"JetBrains Mono",monospace; font-size:12px; color:var(--accent-2); flex:none; padding-top:1px;
+  }
+  .most-read .t{ font-size:12.5px; color:var(--ink-dim); line-height:1.45; }
+  .most-read a:hover .t{ color:var(--ink); }
+
+  .rail-card{
+    background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius); padding:14px;
+  }
+  .rail-card h4{
+    display:flex; align-items:center; gap:7px;
+    font-size:13px; color:var(--ink); margin:0 0 6px;
+  }
+  .rail-card h4 ion-icon{ color:var(--accent-2); font-size:15px; }
+  .rail-card p{ font-size:12px; color:var(--muted); margin:0 0 10px; line-height:1.6; }
+  .rail-card .field{
+    display:flex; gap:6px;
+  }
+  .rail-card input{
+    flex:1; min-width:0; background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius);
+    color:var(--ink); font-family:"Inter",sans-serif; font-size:12px; padding:7px 9px;
+  }
+  .rail-card input::placeholder{ color:var(--muted); }
+  .rail-card input:focus{ outline:none; border-color:var(--accent); }
+  .rail-card button{
+    background:var(--accent); color:#14100e; border:0; border-radius:var(--radius);
+    font-weight:600; font-size:12px; padding:7px 11px; cursor:pointer;
+  }
+  .rail-card button:hover{ opacity:.88; }
+  .rail-status{ list-style:none; margin:0; padding:0; font-family:"JetBrains Mono",monospace; font-size:11px; }
+  .rail-status li{
+    display:flex; align-items:center; gap:8px; padding:7px 0;
+    border-top:1px solid var(--line-soft); color:var(--muted);
+  }
+  .rail-status li:first-child{ border-top:0; }
+  .rail-status .ok{ color:#5fbf8f; font-size:13px; }
+  .rail-status .down{ color:var(--accent); font-size:13px; }
+  .rail-status .val{ margin-left:auto; color:var(--ink-dim); }
+
+  /* ══ related ══ */
+  .related-wrap{ padding-top:44px; }
+  .related-head{
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    border-top:1px solid var(--line); padding-top:16px; margin-bottom:16px;
+  }
+  .related-head h3{ font-size:1.1rem; margin:0; color:var(--ink); }
+  .related-head a{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:12px; color:var(--accent-2); text-decoration:none; font-weight:600;
+  }
+  .related-head a:hover{ text-decoration:underline; }
+  .related-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; }
+  .related-card{
+    background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius);
+    padding:14px; text-decoration:none; display:flex; flex-direction:column; gap:8px;
+  }
+  .related-card:hover{ border-color:rgba(255,255,255,.16); }
+  .related-card .eyebrow{
+    display:inline-flex; align-items:center; gap:5px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; color:var(--accent-2);
+    text-transform:uppercase; letter-spacing:.05em;
+  }
+  .related-card .t{
+    font-family:"Space Grotesk",sans-serif; font-weight:600; font-size:13px;
+    color:var(--ink); line-height:1.4;
+  }
+  .related-card .foot{
+    margin-top:auto; font-family:"JetBrains Mono",monospace; font-size:10px; color:var(--muted);
+    display:flex; align-items:center; gap:5px;
+  }
+
+  /* ══ comments ══ */
+  .comments-wrap{ padding-top:48px; }
+  .comments-inner{ max-width:var(--col); }
+  .comments-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; }
+  .comments-head h3{ display:flex; align-items:center; gap:8px; font-size:1.15rem; color:var(--ink); margin:0; }
+  .comments-head h3 ion-icon{ color:var(--accent); font-size:17px; }
+  .comments-head span{ font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted); }
+  .composer{ background:var(--bg-1); border:1px solid var(--line); border-radius:var(--radius); padding:14px; margin-bottom:20px; }
+  .composer textarea{
+    width:100%; min-height:56px; resize:vertical; border:0; background:transparent;
+    color:var(--ink); font-family:"Inter",sans-serif; font-size:13px; padding:4px; margin-bottom:8px;
+  }
+  .composer textarea:focus{ outline:none; }
+  .composer-row{ display:flex; justify-content:space-between; align-items:center; gap:12px; padding-top:8px; border-top:1px solid var(--line); }
+  .composer-row .as-who{ display:flex; align-items:center; gap:6px; font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--muted); }
+  .composer-row .as-who ion-icon{ font-size:14px; }
+  .composer-row button{
+    display:inline-flex; align-items:center; gap:6px;
+    font-weight:600; font-size:12px; background:var(--accent); color:#14100e;
+    border:0; padding:8px 14px; border-radius:var(--radius); cursor:pointer;
+  }
+  .composer-row button:hover{ opacity:.88; }
+  .comment{ display:flex; gap:11px; padding:14px 0; border-top:1px solid var(--line-soft); }
+  .comment:first-of-type{ border-top:0; }
+  .avatar-c{
+    flex:none; width:32px; height:32px; border-radius:var(--radius);
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:11px; color:#0e0e11;
+  }
+  .comment-body{ flex:1; min-width:0; }
+  .comment-top{ display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .comment-name{ font-weight:600; color:var(--ink); font-size:13px; }
+  .comment-tag{
+    font-family:"JetBrains Mono",monospace; font-size:9.5px; color:var(--muted);
+    text-transform:uppercase; letter-spacing:.04em; background:var(--bg-2); padding:2px 6px; border-radius:3px;
+  }
+  .comment-text{ font-size:13.5px; color:var(--ink-dim); margin:5px 0 7px; line-height:1.6; }
+  .comment-meta{ font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--muted); display:flex; gap:14px; align-items:center; }
+  .comment-meta a{ text-decoration:none; color:var(--muted); display:inline-flex; align-items:center; gap:4px; }
+  .comment-meta a:hover{ color:var(--ink); }
+  .comment-meta ion-icon{ font-size:12px; }
+  .comment.reply{ margin-left:42px; }
+  .load-more{
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    padding:11px; margin-top:8px; border-radius:var(--radius);
+    background:var(--bg-1); border:1px solid var(--line);
+    font-weight:600; font-size:12px;
+  }
+  .load-more a{ color:var(--ink-dim); text-decoration:none; display:inline-flex; align-items:center; gap:6px; }
+  .load-more a:hover{ color:var(--accent); }
+
+  /* ══ footer ══ */
+  footer{ margin-top:64px; border-top:1px solid var(--line); background:var(--bg-1); }
+  .foot-grid{
+    display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:32px;
+    padding:36px 0 30px;
+  }
+  .foot-brand .brand{ margin-bottom:12px; }
+  .foot-brand p{ font-size:12.5px; color:var(--muted); margin:0 0 14px; line-height:1.7; max-width:34ch; }
+  .foot-social{ display:flex; gap:8px; }
+  .foot-social a{
+    width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center;
+    border:1px solid var(--line); border-radius:var(--radius); color:var(--muted); text-decoration:none;
+  }
+  .foot-social a:hover{ color:var(--ink); border-color:rgba(255,255,255,.16); }
+  .foot-col h5{
+    font-family:"JetBrains Mono",monospace; font-weight:500; font-size:10px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--accent-2); margin:0 0 12px;
+  }
+  .foot-col ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .foot-col a{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12.5px; color:var(--ink-dim); text-decoration:none;
+  }
+  .foot-col a:hover{ color:var(--ink); }
+  .foot-col a ion-icon{ font-size:14px; color:var(--muted); }
+
+  .onion{
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    padding:16px 0;
+  }
+  .onion-inner{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+  .onion .label{
+    display:flex; align-items:center; gap:7px;
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.07em;
+    text-transform:uppercase; color:var(--accent-2); flex:none;
+  }
+  .onion-addr{
+    display:flex; align-items:center; gap:10px; flex:1; min-width:260px;
+    background:var(--bg-2); border:1px solid var(--line); border-radius:var(--radius);
+    padding:9px 11px;
+  }
+  .onion-addr code{
+    font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--ink);
+    overflow-x:auto; white-space:nowrap; scrollbar-width:none;
+  }
+  .onion-addr code::-webkit-scrollbar{ display:none; }
+  .onion-addr button{
+    margin-left:auto; display:inline-flex; align-items:center; gap:5px;
+    background:transparent; border:1px solid var(--line); border-radius:var(--radius);
+    color:var(--ink-dim); font-family:"JetBrains Mono",monospace; font-size:10.5px;
+    padding:5px 9px; cursor:pointer; flex:none;
+  }
+  .onion-addr button:hover{ color:var(--ink); border-color:var(--accent); }
+  .onion .hint{ font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--muted); line-height:1.6; }
+
+  .foot-legal{
+    display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap;
+    padding:18px 0 34px;
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; color:var(--muted);
+  }
+  .foot-legal nav{ display:flex; gap:16px; flex-wrap:wrap; }
+  .foot-legal a{ text-decoration:none; color:var(--muted); }
+  .foot-legal a:hover{ color:var(--ink); }
+
+  /* ══ responsive ══ */
+  @media(max-width:1080px){
+    .layout{ grid-template-columns:minmax(0,1fr); gap:0; }
+    .rail{ position:static; border-top:1px solid var(--line); padding-top:28px; margin-top:34px; }
+    .rail{ display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+    .related-grid{ grid-template-columns:1fr 1fr; }
+    .foot-grid{ grid-template-columns:1fr 1fr; gap:28px; }
+  }
+  @media(max-width:860px){
+    .sections-bar{ display:none; }
+    .masthead-inner{ grid-template-columns:auto 1fr auto; }
+    .account .btn-ghost{ display:none; }
+    .utility .hide-sm{ display:none; }
+    .menu-account{ display:flex; }
+  }
+  @media(max-width:640px){
+    .shell{ padding:0 16px; }
+    .menu-grid{ grid-template-columns:1fr; gap:26px; }
+    .rail{ grid-template-columns:1fr; }
+    .related-grid{ grid-template-columns:1fr; }
+    .foot-grid{ grid-template-columns:1fr; }
+    .byline .meta{ width:100%; margin-left:0; }
+    .verify-row{ flex-wrap:wrap; }
+    .verify-row .name{ width:auto; }
+    .comment.reply{ margin-left:18px; }
+    .hero-media{ aspect-ratio:16/10; }
+    .headline-block h1{ max-width:none; }
+    .account .icon-btn{ display:none; }
+    .sections-btn span{ display:none; }
+    .sections-btn{ padding:7px 9px; }
+  }
+  @media(prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    .utility .dot{ animation:none; }
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+
+<body>
+
+<a class="skip" href="#main">Skip to article</a>
+
+<header class="site-header" id="siteHeader">
+
+  <div class="utility">
+    <div class="shell utility-inner">
+      <span class="live"><span class="dot"></span>mirror 0468 online</span>
+      <span class="pipe"></span>
+      <span>Tuesday 18 October 2022</span>
+      <div class="utility-right">
+        <a href="#"><ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>Mirror list</a>
+        <a href="#" class="hide-sm"><ion-icon name="logo-rss" aria-hidden="true"></ion-icon>RSS</a>
+        <a href="#" class="hide-sm"><ion-icon name="language-outline" aria-hidden="true"></ion-icon>EN</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="masthead">
+    <div class="shell masthead-inner">
+      <button class="sections-btn" id="menuBtn" aria-expanded="false" aria-controls="menuPanel">
+        <ion-icon name="menu-outline" aria-hidden="true"></ion-icon><span>Sections</span>
+      </button>
+
+      <a class="brand" href="#" aria-label="The Exile Press - home">
+        <svg width="28" height="28" viewBox="0 0 32 32" role="img" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="7" y="8" width="6" height="7" rx="1"/>
+            <polygon points="7,15 13,15 7,20"/>
+            <rect x="17" y="8" width="6" height="7" rx="1"/>
+            <polygon points="17,15 23,15 17,20"/>
+          </g>
+          <rect x="6" y="24" width="20" height="2.6" rx="1" fill="#e05636"/>
+        </svg>
+        <span class="word">The <em>Exile</em> Press</span>
+      </a>
+
+      <div class="account">
+        <button class="icon-btn" aria-label="Search the archive"><ion-icon name="search-outline" aria-hidden="true"></ion-icon></button>
+        <a class="btn-ghost" href="#"><ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>Log in</a>
+        <a class="btn-solid" href="#"><ion-icon name="person-add-outline" aria-hidden="true"></ion-icon>Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <nav class="sections-bar" aria-label="Sections">
+    <div class="shell sections-inner">
+      <a href="#" class="active">Investigations</a>
+      <a href="#">Politics</a>
+      <a href="#">Security</a>
+      <a href="#">Society</a>
+      <a href="#">Opinion</a>
+      <a href="#">Archive</a>
+      <span class="stamp">Updated 18 Oct · 09:40</span>
+    </div>
+  </nav>
+
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+</header>
+
+<div class="menu-panel" id="menuPanel">
+  <div class="shell">
+    <div class="menu-top">
+      <a class="brand" href="#" style="margin:0">
+        <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+          <g fill="currentColor">
+            <rect x="7" y="8" width="6" height="7" rx="1"/>
+            <polygon points="7,15 13,15 7,20"/>
+            <rect x="17" y="8" width="6" height="7" rx="1"/>
+            <polygon points="17,15 23,15 17,20"/>
+          </g>
+          <rect x="6" y="24" width="20" height="2.6" rx="1" fill="#e05636"/>
+        </svg>
+        <span class="word">The <em>Exile</em> Press</span>
+      </a>
+      <button class="icon-btn" id="closeBtn" aria-label="Close menu"><ion-icon name="close-outline" aria-hidden="true"></ion-icon></button>
+    </div>
+
+    <div class="menu-grid">
+      <div class="menu-col">
+        <h4>Sections</h4>
+        <a href="#"><ion-icon name="search-outline" aria-hidden="true"></ion-icon>Investigations<span class="sub">14 open</span></a>
+        <a href="#"><ion-icon name="business-outline" aria-hidden="true"></ion-icon>Politics</a>
+        <a href="#"><ion-icon name="shield-half-outline" aria-hidden="true"></ion-icon>Security</a>
+        <a href="#"><ion-icon name="people-outline" aria-hidden="true"></ion-icon>Society</a>
+        <a href="#"><ion-icon name="chatbubbles-outline" aria-hidden="true"></ion-icon>Opinion</a>
+        <a href="#"><ion-icon name="file-tray-full-outline" aria-hidden="true"></ion-icon>Archive</a>
+      </div>
+      <div class="menu-col">
+        <h4>The Exile Press</h4>
+        <a href="#"><ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>Secure tip line<span class="sub">Tor</span></a>
+        <a href="#"><ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>Mirror list<span class="sub">04 live</span></a>
+        <a href="#"><ion-icon name="mail-outline" aria-hidden="true"></ion-icon>Newsletter</a>
+        <a href="#"><ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>Editorial standards</a>
+        <a href="#"><ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>About us</a>
+        <a href="#"><ion-icon name="heart-outline" aria-hidden="true"></ion-icon>Support our work</a>
+      </div>
+    </div>
+
+    <div class="menu-account">
+      <a class="btn-ghost" href="#"><ion-icon name="log-in-outline" aria-hidden="true"></ion-icon>Log in</a>
+      <a class="btn-solid" href="#"><ion-icon name="person-add-outline" aria-hidden="true"></ion-icon>Sign up</a>
+    </div>
+  </div>
+</div>
+
+<div class="alert-strip">
+  <div class="shell alert-inner">
+    <ion-icon name="warning-outline" aria-hidden="true"></ion-icon>
+    <span><b>Blocked inside Esteloria.</b> You are using mirror 0468</span>
+    <span class="sep">·</span>
+    <span>last takedown notice: 3 days ago</span>
+    <a href="#">How to reach us safely <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon></a>
+  </div>
+</div>
+
+<main id="main">
+
+  <div class="shell">
+    <div class="crumb">
+      <a href="#">Investigations</a>
+      <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+      <span>The Purifying Flame</span>
+    </div>
+  </div>
+
+  <section class="shell hero">
+    <figure style="margin:0">
+      <div class="hero-media">
+        <img src="assets/hero-street.jpg" alt="A hooded figure walking away from the camera on an Estelorian street at dusk, face turned away, image blurred by motion and distance.">
+      </div>
+      <figcaption class="credit">
+        <span>A street in Esteloria, photographed at dusk. The person pictured is not connected to this investigation.</span>
+        <span class="src">Photograph · The Exile Press</span>
+      </figcaption>
+    </figure>
+
+    <div class="headline-block">
+      <div class="kicker"><ion-icon name="lock-open-outline" aria-hidden="true"></ion-icon>Exclusive · Investigation</div>
+      <h1>The People We Were Told Were Never Real</h1>
+      <p class="dek">An eight-month investigation found evidence that Estelorian folklore was describing something real all along - and that a state agency most citizens have never heard of has been hunting those people for five hundred years.</p>
+    </div>
+  </section>
+
+  <div class="shell layout">
+
+    <div class="col-main">
+
+      <div class="measure">
+        <div class="byline">
+          <span class="avatar">MD</span>
+          <span><b>Maren D.</b> · Investigations</span>
+          <span class="dot">·</span>
+          <span>18 October 2022</span>
+          <span class="meta">
+            <span><ion-icon name="time-outline" aria-hidden="true"></ion-icon>9 min read</span>
+            <span><ion-icon name="chatbubble-outline" aria-hidden="true"></ion-icon>18</span>
+          </span>
+        </div>
+
+        <div class="actions">
+          <a class="act" href="#"><ion-icon name="share-social-outline" aria-hidden="true"></ion-icon>Share</a>
+          <button class="act" id="copyLink"><ion-icon name="link-outline" aria-hidden="true"></ion-icon><span>Copy link</span></button>
+          <a class="act" href="#"><ion-icon name="bookmark-outline" aria-hidden="true"></ion-icon>Save</a>
+          <a class="act only-icon" href="#" aria-label="Email this article"><ion-icon name="mail-outline" aria-hidden="true"></ion-icon></a>
+          <a class="act only-icon" href="#" aria-label="Print this article"><ion-icon name="print-outline" aria-hidden="true"></ion-icon></a>
+          <a class="act only-icon" href="#" aria-label="Download as plain text"><ion-icon name="download-outline" aria-hidden="true"></ion-icon></a>
+        </div>
+
+        <div class="note">
+          <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+          <div><b>Note on sourcing.</b> Several names and identifying details in this piece have been changed or withheld to protect people whose safety could be compromised. Commenters appear under automatically assigned pseudonyms. We do not publish information that could be used to locate or identify anyone at risk.</div>
+        </div>
+
+        <div class="prose">
+          <p class="lede">
+            Most people in Esteloria will tell you the old peoples never existed at all. The elves of the ballads, the kitsune (or gumiho), the cat-eared folk and the other creatures that fill the country's folklore - not lost, not extinct, but invented. Bedtime stories. You grow up hearing them, and then you're taught they were never anything more than that.
+          </p>
+
+          <p>
+            We spent eight months trying to verify that assumption. We couldn't.
+          </p>
+
+          <p>
+            Instead, we found evidence that people matching the descriptions from those old accounts have survived into the modern day - not as isolated individuals, but as communities, with families and children, hidden across the country and beyond its borders. The number of survivors is far larger than the word "survivors" tends to imply.
+          </p>
+
+          <p>
+            We also found something most citizens have never heard of. An agency called <b>TPF</b>.
+          </p>
+
+          <p>
+            TPF stands for <b>The Purifying Flame</b>. Its origins go back to 1482, when King Edmund III issued his first royal decree founding an order to hunt, prosecute, and execute non-human peoples throughout Esteloria. Over the centuries the name changed and the structure was modernised, but the mission didn't stop. In 1934, under the republic, the Flame was reorganised as the <b>TPF Research and Detainment Division</b> - a state agency with authority over nearly every other government body, shielded by confidentiality laws that keep its operations out of public view.
+          </p>
+
+          <p>
+            It is still operating.
+          </p>
+
+          <p>
+            We found evidence of an organization working against it. They call themselves <b>Vaelthorn Network</b>. By the accounts we have been able to gather, they have been extracting people from TPF facilities and concealing them for years - long enough that TPF itself apparently did not learn Vaelthorn's name until 2013, following a facility breakout that left dozens of TPF personnel dead.
+          </p>
+        </div>
+
+
+        <div class="prose">
+          <p>
+            We were able to arrange an interview with a woman who calls herself <b>Lyne</b>, believed to be one of Vaelthorn's senior operatives. She spoke to us over an audio-only call and would not confirm her location.
+          </p>
+        </div>
+
+        <div class="section-label"><ion-icon name="mic-outline" aria-hidden="true"></ion-icon>The interview</div>
+      </div>
+
+      <div class="transcript">
+        <div class="transcript-head">
+          <div class="tag"><ion-icon name="call-outline" aria-hidden="true"></ion-icon>Full transcript · audio call</div>
+          <h2>"They were about real people"</h2>
+          <p>Edited for length and clarity. Lyne's exact location was not disclosed to the Press.</p>
+        </div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">How should we refer to you?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">Lyne is fine. It's not my birth name, but it's what I go by.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">You agreed to this interview. Why?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">Because we're at the point where it's time people knew. I've spent years watching this go completely unreported - not suppressed, not covered up. Just unreported. Nobody writes about it because nobody thinks there's anything to write about. As long as the assumption is that we're folklore, everything being done to us stays invisible.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">So you want to change that assumption.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">I want to give people enough information to start asking their own questions. What they do after that is up to them.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Let's start with the basic claim. The elves, the kitsune, the cat-eared folk from the old tales - most people here don't think they died out. They think they were never real to begin with. You're saying they're alive today.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">They're real, and they've been alive this whole time. And it isn't just one kind of people - there are several, more than most outsiders would ever guess, and they've been living among you for generations. In your cities. Sending their children to your schools. The ones who can pass as human do. The ones who can't have to disappear entirely.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">And this isn't a small number of people.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">No. I'm not going to give you a figure, but the word "handful" would be seriously wrong. These are communities. Families. Children growing up who've never known anything except hiding.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">You mentioned TPF. For readers who've never heard the name - what is it, from where you stand?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">It's the thing our parents warned us about. The reason a family teaches its children to keep their ears covered before they teach them to read. On paper it's a government agency with a long history and a lot of legal cover. To us it's simpler than that: it's what comes for you if the wrong person ever finds out what you are. Everyone I've ever protected has lost someone to it.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">What does it do now? In practice.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">Mostly, it finds people and kills them. That's the bulk of what TPF does, and it's what it was built to do - an extermination agency first, everything else second. Facilities and detainment happen too, when TPF wants someone alive for a reason. There's at least one program inside the agency built specifically around that. I'm not going to get into what it involves. We'll come back to that another time.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">So detention isn't the norm.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">No. People assume TPF is mostly a research operation because the name has "research" in it. It isn't. Killing is the default. Being kept alive is the exception, and it's usually worse.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Tell us about Vaelthorn.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">We don't just wait until someone's already inside a facility and pull them out after the fact. We go after TPF directly - tracking their transports, hitting routes, going into facilities before intake happens, not only after. Extraction is what it looks like when prevention has already failed. And getting someone out is only half of it; keeping them safe afterward is often the harder job. That's the short version. The real work is planning, timing, and a lot of very dangerous nights.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">How long has Vaelthorn been operating?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">Longer than TPF realises.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Does Vaelthorn use violence?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">Extractions are the flattering part of the story, the part that sounds justifiable. But I won't frame Vaelthorn as a rescue service that occasionally has to get its hands dirty. Our people have been hunted for five hundred years. We fight the ones doing the hunting - quietly, for a long time, because being seen would have gotten everyone killed. It isn't something we resort to when a rescue goes wrong. It's most of what we do. TPF only learned our name in 2013. That doesn't mean we weren't there before.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">People have been killed in your operations.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">People have been killed in TPF operations for five centuries. People have died in ours too. I'm not going to pretend otherwise.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Some would call you a resistance movement. A paramilitary.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">Call it whatever makes sense to you. The labels matter less to me than the fact that the work exists and someone has to do it. If we stopped, there would be no one else. That's not a complaint. It's just the situation.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Why come forward now? Why 2022?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">For a long time, staying invisible was the only thing keeping people alive, so that's what we did. It worked - but it never changed anything. The hunting didn't stop. It just stayed hidden along with us. At some point you realise that hiding forever means the system outlives everyone in it, and nothing gets better for the next generation. People can't demand their government stop doing something they don't even know is being done. So I decided it was time at least one of us was willing to be seen and say it out loud. We'll keep protecting our people the same way we always have. But silence was never going to be enough on its own.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">You want public pressure.</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">I want people to have enough information to make up their own minds. That's it.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Aren't you worried that publishing this puts the people you protect in more danger?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">That's the thing I worry about most. It's why I'm not giving you names or locations, and why almost nothing in this piece is pictured. The one photograph we agreed to run took a long conversation before I said yes. But the alternative is staying invisible forever, and I've watched what that does. If nobody knows you exist, nobody fights for you. Nobody even thinks to ask where you went.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Are you afraid?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">I used to be. Not anymore.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Of being identified?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">TPF already knows who I am. They've known for years - my name, my face, that I run Vaelthorn. Knowing and catching are two different problems, and they've never been good at the second one. So this interview doesn't expose me; there's nothing left to expose. I still weighed every word, because plenty of people around me are not known, and I won't be the reason that changes. But for myself? No. That fear stopped being useful a long time ago.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Is there something you'd want to say directly to people reading this?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">I'm not angry at anyone for not knowing. Nobody told you. You grew up hearing the stories and then you were told to stop believing them, and you did, because that's what a reasonable person does. I'm asking you to reconsider. Not because the fairy tales got every detail right - but because they were about real people. And those people are still here, and they could use someone noticing.</div></div>
+
+        <div class="exchange q"><div class="speaker"><ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>The Press</div><div class="msg">Is there anything you'd add?</div></div>
+        <div class="exchange a"><div class="speaker"><ion-icon name="person-outline" aria-hidden="true"></ion-icon>Lyne</div><div class="msg">No, I think you have enough to work with. I hope you print it.</div></div>
+      </div>
+
+      <figure class="breakout">
+        <div class="frame portrait">
+          <img src="assets/photo.jpg" alt="Two Vaelthorn operatives, photograph cleared for publication by Lyne. Lyne is one of the two people pictured.">
+        </div>
+        <figcaption>Two Vaelthorn operatives. Lyne, who is one of the two pictured, agreed to let this image run on condition that neither be named.</figcaption>
+      </figure>
+
+      <div class="measure">
+        <div class="prose">
+          <p>
+            Lyne declined to say where Vaelthorn operates, how many people belong to it, or how many extractions it has carried out. She did not identify any of the individuals whose existence we have been investigating independently.
+          </p>
+
+          <p>
+            She was more willing to discuss the system itself - the legal framework that gives TPF its authority, what she says happens inside its facilities, and why she believes public awareness will help to change it. Her account is consistent with documents provided through her intermediary, which were reviewed by two editors.
+          </p>
+        </div>
+
+        <div class="pull-quote">If nobody knows you exist, nobody fights for you. Nobody even thinks to ask where you went.</div>
+
+        <div class="section-label"><ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>What we could verify</div>
+
+        <div class="prose">
+          <p>
+            We reviewed documents and photographs provided through intermediaries connected to Lyne, alongside testimony from multiple independent sources. None of them individually proves the full history she described. Taken together, they point consistently in the same direction: people matching the old descriptions have survived into the present, TPF has been operating against them, and a network has been working to get them out.
+          </p>
+        </div>
+
+        <div class="verify-card">
+          <div class="verify-row">
+            <span class="name"><ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>Documents</span>
+            <span class="vnote">Internal TPF paperwork provided through sources, referencing "subjects" and classification numbers. Reviewed by two editors.</span>
+            <span class="status ok"><ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>Consistent</span>
+          </div>
+          <div class="verify-row">
+            <span class="name"><ion-icon name="images-outline" aria-hidden="true"></ion-icon>Photographs</span>
+            <span class="vnote">Several images provided by sources corroborate testimony but cannot be independently dated.</span>
+            <span class="status warn"><ion-icon name="alert-circle-outline" aria-hidden="true"></ion-icon>Partial</span>
+          </div>
+          <div class="verify-row">
+            <span class="name"><ion-icon name="people-outline" aria-hidden="true"></ion-icon>Testimony</span>
+            <span class="vnote">Multiple sources describe overlapping details without prior contact with one another.</span>
+            <span class="status ok"><ion-icon name="checkmark-circle-outline" aria-hidden="true"></ion-icon>Corroborated</span>
+          </div>
+          <div class="verify-row">
+            <span class="name"><ion-icon name="business-outline" aria-hidden="true"></ion-icon>Government</span>
+            <span class="vnote">The Ministry of Internal Security was approached for comment.</span>
+            <span class="status no"><ion-icon name="ellipse-outline" aria-hidden="true"></ion-icon>No response</span>
+          </div>
+        </div>
+
+        <div class="prose">
+          <p>
+            We are withholding several pieces of evidence because publishing them would make it possible to identify living people. This isn't a statement about their authenticity. It's a decision about what journalism should cost its sources.
+          </p>
+        </div>
+      </div>
+
+      <figure class="breakout">
+        <div class="frame">
+         <img src="assets/landscape.jpg" alt="A distant, indistinct photograph of a railway platform or bus terminal at night, no faces resolvable.">
+        </div>
+        <figcaption>Survival often means moving without leaving a trail. <br><span class="mono" style="color:var(--muted)">Photograph · The Exile Press</span></figcaption>
+      </figure>
+
+      <div class="measure">
+        <div class="prose">
+          <p>
+            We put the findings of this investigation to the Ministry of Internal Security. The Ministry did not respond. We were unable to contact TPF directly - the agency maintains no public-facing office and no published contact information that we could find.
+          </p>
+          <p>
+            This investigation will continue.
+          </p>
+        </div>
+
+        <div class="note" style="margin-top:26px">
+          <ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>
+          <div><b>Know something about this?</b> Our secure tip line accepts documents over Tor and never logs sender metadata. Read the guidance before you send anything from inside Esteloria.</div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <div class="rail-block">
+        <h3><ion-icon name="trending-up-outline" aria-hidden="true"></ion-icon>Most read</h3>
+        <ol class="most-read">
+          <li><a href="#"><span class="n">1</span><span class="t">The People We Were Told Were Never Real</span></a></li>
+          <li><a href="#"><span class="n">2</span><span class="t">Corvenne port sale collapses after a third bidder walks away</span></a></li>
+          <li><a href="#"><span class="n">3</span><span class="t">The winter heating subsidy that never reached Halveth</span></a></li>
+          <li><a href="#"><span class="n">4</span><span class="t">Merrowgate’s flood defences were signed off untested, engineers say</span></a></li>
+          <li><a href="#"><span class="n">5</span><span class="t">Twelve years of rail delays, in one chart</span></a></li>
+        </ol>
+      </div>
+
+      <div class="rail-card">
+        <h4><ion-icon name="mail-outline" aria-hidden="true"></ion-icon>The weekly dispatch</h4>
+        <p>One email a week: what we published, what was blocked, and where the mirrors moved.</p>
+        <div class="field">
+          <input type="email" placeholder="you@example.org" aria-label="Email address">
+          <button type="button">Sign up</button>
+        </div>
+      </div>
+
+      <div class="rail-block">
+        <h3><ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>Mirror status</h3>
+        <ul class="rail-status">
+          <li><ion-icon class="ok" name="checkmark-circle-outline" aria-hidden="true"></ion-icon>mirror 0468<span class="val">online</span></li>
+          <li><ion-icon class="ok" name="checkmark-circle-outline" aria-hidden="true"></ion-icon>mirror 0469<span class="val">online</span></li>
+          <li><ion-icon class="down" name="close-circle-outline" aria-hidden="true"></ion-icon>mirror 0328<span class="val">seized</span></li>
+          <li><ion-icon class="ok" name="lock-closed-outline" aria-hidden="true"></ion-icon>Onion service<span class="val">online</span></li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <div class="shell related-wrap">
+    <div class="related-head">
+      <h3>More from Investigations</h3>
+      <a href="#">See all <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon></a>
+    </div>
+    <div class="related-grid">
+      <a class="related-card" href="#">
+        <div class="eyebrow"><ion-icon name="business-outline" aria-hidden="true"></ion-icon>Politics</div>
+        <div class="t">Two ministries, one budget line, forty million unaccounted for</div>
+        <div class="foot"><ion-icon name="time-outline" aria-hidden="true"></ion-icon>7 min</div>
+      </a>
+      <a class="related-card" href="#">
+        <div class="eyebrow"><ion-icon name="shield-half-outline" aria-hidden="true"></ion-icon>Security</div>
+        <div class="t">Duncarrow’s garrison housing has been condemned since 2016</div>
+        <div class="foot"><ion-icon name="time-outline" aria-hidden="true"></ion-icon>8 min</div>
+      </a>
+      <a class="related-card" href="#">
+        <div class="eyebrow"><ion-icon name="chatbubbles-outline" aria-hidden="true"></ion-icon>Opinion</div>
+        <div class="t">The grain deal was never going to survive the winter</div>
+        <div class="foot"><ion-icon name="time-outline" aria-hidden="true"></ion-icon>5 min</div>
+      </a>
+      <a class="related-card" href="#">
+        <div class="eyebrow"><ion-icon name="people-outline" aria-hidden="true"></ion-icon>Society</div>
+        <div class="t">A 2011 Budget Line Left Rural Ostrey Without Doctors</div>
+        <div class="foot"><ion-icon name="time-outline" aria-hidden="true"></ion-icon>6 min</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="shell comments-wrap" id="comments">
+    <div class="comments-inner">
+      <div class="comments-head">
+        <h3><ion-icon name="chatbubbles-outline" aria-hidden="true"></ion-icon>Discussion</h3>
+        <span>18 comments</span>
+      </div>
+
+      <div class="composer">
+        <textarea placeholder="Add a comment - you'll appear under a pseudonym"></textarea>
+        <div class="composer-row">
+          <span class="as-who"><ion-icon name="person-circle-outline" aria-hidden="true"></ion-icon>Posting as <b style="color:var(--ink)">Guest·7734</b> (auto-assigned)</span>
+          <button type="button"><ion-icon name="send-outline" aria-hidden="true"></ion-icon>Post</button>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="avatar-c" style="background:#8b5632">G</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">Guest·7534</span><span class="comment-tag">guest</span></div>
+          <div class="comment-text">My grandmother used to tell stories about the fox-eared people. I always figured she made half of it up. Now I don't know what to think.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>2h ago</span></div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="avatar-c" style="background:#3d6a96">M</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">Morrow</span><span class="comment-tag">reader</span></div>
+          <div class="comment-text">Everyone's arguing about whether the photo is real. Nobody's talking about the part where a state agency has "authority over nearly every other government body" and basically no oversight. That's the sentence that should be the headline.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>2h ago</span></div>
+        </div>
+      </div>
+
+      <div class="comment reply">
+        <div class="avatar-c" style="background:#6b4a8a">OR</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">OldRoad</span><span class="comment-tag">reader</span></div>
+          <div class="comment-text">What gets me is how calm she is about all of it. Not performing for the public, not trying to make you feel anything. Just stating it. That reads as more true to me than if she'd been angry.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>1h ago</span></div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="avatar-c" style="background:#3d7a5c">PB</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">PaperBoat</span><span class="comment-tag">reader</span></div>
+          <div class="comment-text">Read this on my lunch break and couldn't think about anything else for the rest of the day. Sharing it with everyone I know before the mirror goes down.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>3h ago</span></div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="avatar-c" style="background:#8a7a3d">GM</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">GreyMile</span><span class="comment-tag">reader</span></div>
+          <div class="comment-text">There was a fenced compound out past our town when I was a kid. No sign, unmarked vans in and out at odd hours, and adults changed the subject if you asked. We assumed military. I've been sitting here for an hour now thinking about it differently.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>5h ago</span></div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="avatar-c" style="background:#965064">CW</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">Candlewick</span><span class="comment-tag">reader</span></div>
+          <div class="comment-text">Genuinely can't decide if I believe this. It feels too big to fabricate and too big to be true at the same time.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>6h ago</span></div>
+        </div>
+      </div>
+
+      <div class="comment">
+        <div class="avatar-c" style="background:#4a6e80">HN</div>
+        <div class="comment-body">
+          <div class="comment-top"><span class="comment-name">HalfNote</span><span class="comment-tag">reader</span></div>
+          <div class="comment-text">34 years in this country and I never once heard the name TPF before today. Either I wasn't paying attention or someone worked very hard to make sure I didn't.</div>
+          <div class="comment-meta"><a href="#"><ion-icon name="arrow-undo-outline" aria-hidden="true"></ion-icon>Reply</a><a href="#"><ion-icon name="share-outline" aria-hidden="true"></ion-icon>Share</a><span>7h ago</span></div>
+        </div>
+      </div>
+
+      <div class="load-more"><a href="#"><ion-icon name="chevron-down-outline" aria-hidden="true"></ion-icon>Load 11 more comments</a></div>
+    </div>
+  </div>
+</main>
+
+<footer id="footer">
+  <div class="shell">
+    <div class="foot-grid">
+      <div class="foot-col foot-brand">
+        <a class="brand" href="#" aria-label="The Exile Press - home">
+          <svg width="26" height="26" viewBox="0 0 32 32" aria-hidden="true">
+            <g fill="currentColor">
+              <rect x="7" y="8" width="6" height="7" rx="1"/>
+              <polygon points="7,15 13,15 7,20"/>
+              <rect x="17" y="8" width="6" height="7" rx="1"/>
+              <polygon points="17,15 23,15 17,20"/>
+            </g>
+            <rect x="6" y="24" width="20" height="2.6" rx="1" fill="#e05636"/>
+          </svg>
+          <span class="word">The <em>Exile</em> Press</span>
+        </a>
+        <p>Independent journalism on Esteloria, written by exiles and published outside its borders since 2009.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Newsletter"><ion-icon name="mail-outline" aria-hidden="true"></ion-icon></a>
+          <a href="#" aria-label="RSS feed"><ion-icon name="logo-rss" aria-hidden="true"></ion-icon></a>
+          <a href="#" aria-label="Signal"><ion-icon name="chatbubble-ellipses-outline" aria-hidden="true"></ion-icon></a>
+          <a href="#" aria-label="PGP key"><ion-icon name="key-outline" aria-hidden="true"></ion-icon></a>
+        </div>
+      </div>
+
+      <div class="foot-col">
+        <h5>Sections</h5>
+        <ul>
+          <li><a href="#"><ion-icon name="search-outline" aria-hidden="true"></ion-icon>Investigations</a></li>
+          <li><a href="#"><ion-icon name="business-outline" aria-hidden="true"></ion-icon>Politics</a></li>
+          <li><a href="#"><ion-icon name="shield-half-outline" aria-hidden="true"></ion-icon>Security</a></li>
+          <li><a href="#"><ion-icon name="people-outline" aria-hidden="true"></ion-icon>Society</a></li>
+          <li><a href="#"><ion-icon name="file-tray-full-outline" aria-hidden="true"></ion-icon>Archive</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h5>The paper</h5>
+        <ul>
+          <li><a href="#"><ion-icon name="information-circle-outline" aria-hidden="true"></ion-icon>About us</a></li>
+          <li><a href="#"><ion-icon name="checkmark-done-outline" aria-hidden="true"></ion-icon>Editorial standards</a></li>
+          <li><a href="#"><ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>Source protection</a></li>
+          <li><a href="#"><ion-icon name="heart-outline" aria-hidden="true"></ion-icon>Support our work</a></li>
+          <li><a href="#"><ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon>Work with us</a></li>
+        </ul>
+      </div>
+
+      <div class="foot-col">
+        <h5>Reach us</h5>
+        <ul>
+          <li><a href="#"><ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>Secure tip line</a></li>
+          <li><a href="#"><ion-icon name="key-outline" aria-hidden="true"></ion-icon>PGP public key</a></li>
+          <li><a href="#"><ion-icon name="git-network-outline" aria-hidden="true"></ion-icon>Mirror list</a></li>
+          <li><a href="#"><ion-icon name="download-outline" aria-hidden="true"></ion-icon>Offline editions</a></li>
+          <li><a href="#"><ion-icon name="megaphone-outline" aria-hidden="true"></ion-icon>Corrections</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="onion">
+    <div class="shell onion-inner">
+      <span class="label"><ion-icon name="lock-closed-outline" aria-hidden="true"></ion-icon>Onion service</span>
+      <div class="onion-addr">
+        <code id="onionAddr">http://k7v0zqx1n9dmt8hrb3wcfy2gsjp6lae5uqzn40xhtv91d.onion/</code>
+        <button type="button" id="copyOnion"><ion-icon name="copy-outline" aria-hidden="true"></ion-icon><span>Copy</span></button>
+      </div>
+      <span class="hint">Tor Browser only. Check the address against a second source before you use it.</span>
+    </div>
+  </div>
+
+  <div class="shell foot-legal">
+    <span>© 2022 The Exile Press</span>
+    <nav>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Complaints</a>
+      <a href="#">Mirror list</a>
+    </nav>
+  </div>
+</footer>
+
+<script type="module" src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.4.0/dist/ionicons/ionicons.js"></script>
+
+<script>
+(function(){
+  /* menu panel */
+  var menuBtn=document.getElementById('menuBtn'),
+      closeBtn=document.getElementById('closeBtn'),
+      panel=document.getElementById('menuPanel');
+
+  function openMenu(){ panel.classList.add('open'); menuBtn.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
+  function closeMenu(){ panel.classList.remove('open'); menuBtn.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+
+  menuBtn.addEventListener('click', openMenu);
+  closeBtn.addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && panel.classList.contains('open')) closeMenu(); });
+
+  /* reading progress + compact header */
+  var fill=document.getElementById('progressFill'),
+      header=document.getElementById('siteHeader');
+
+  function onScroll(){
+    var h=document.documentElement,
+        sT=h.scrollTop||document.body.scrollTop,
+        sH=(h.scrollHeight||document.body.scrollHeight)-h.clientHeight;
+    fill.style.width=(sH>0?(sT/sH)*100:0)+'%';
+    header.classList.toggle('is-scrolled', sT>90);
+  }
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  /* copy helpers */
+  function copy(text, btn, done){
+    var label=btn.querySelector('span'), original=label ? label.textContent : '';
+    function flash(){ if(!label) return; label.textContent=done; setTimeout(function(){ label.textContent=original; }, 1600); }
+    if(navigator.clipboard && window.isSecureContext){
+      navigator.clipboard.writeText(text).then(flash).catch(fallback);
+    } else { fallback(); }
+    function fallback(){
+      var ta=document.createElement('textarea');
+      ta.value=text; ta.setAttribute('readonly','');
+      ta.style.position='absolute'; ta.style.left='-9999px';
+      document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); flash(); }catch(err){}
+      document.body.removeChild(ta);
+    }
+  }
+
+  var copyOnion=document.getElementById('copyOnion');
+  copyOnion.addEventListener('click', function(){
+    copy(document.getElementById('onionAddr').textContent.trim(), copyOnion, 'Copied');
+  });
+
+  var copyLink=document.getElementById('copyLink');
+  copyLink.addEventListener('click', function(){
+    copy(window.location.href, copyLink, 'Link copied');
+  });
+
+  Array.prototype.forEach.call(document.images, function(img){
+    img.addEventListener('error', function(){ img.style.display='none'; });
+  });
+})();
+</script>
+</body>
+</html>

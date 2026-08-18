@@ -309,6 +309,18 @@ const documentList = [
       { id: 'vaelthorn-operative-eimi' },
       { id: 'cc14-session-031-yue' }
     ]
+  },  {
+    id: 'exile-press-lyne-interview',
+    code: 'PRESS ARTICLE',
+    title: 'The People We Were Told Were Never Real - The Exile Press',
+    category: 'News Articles',
+    embed: 'docs/the_exile_press_lyne_interview/index.html',
+    thumb: 'docs/thumbs/the_exile_press_lyne_interview.jpg',
+    originalDate: '18 Oct 2022',
+    published: '2026-08-19',
+    teaser:
+      'An eight-month investigation into the surviving non-human peoples of Esteloria, the state agency that hunts them, and the network that has been getting them out. Never was classified; added for reference only.',
+    related: []
   },
 ];
 
