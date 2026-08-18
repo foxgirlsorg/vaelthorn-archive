@@ -167,7 +167,7 @@ const documentList = [
       { id: 'record-378241-report' },
       {
           label: "Fan art — Yue's Indifference",
-          url: 'https://aibooru.online/posts/38957'
+          url: 'https://aibooru.online/posts/161466'
        }
     ]
   },
