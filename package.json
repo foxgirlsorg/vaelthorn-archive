@@ -5,8 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev:lodestar": "npm --prefix lodestar run dev",
+    "build": "vite build && npm run build:lodestar",
+    "build:lodestar": "npm --prefix lodestar run build -- --outDir ../dist/lodestar --emptyOutDir",
+    "preview": "vite preview",
+    "postinstall": "npm --prefix lodestar ci"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^5.0.3",

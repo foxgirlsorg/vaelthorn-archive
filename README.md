@@ -23,6 +23,14 @@ npm run build   # static output in dist/
 `dist/` is self-contained and uses relative paths, so it works on any static
 host and from a subdirectory.
 
+## Lodestar Maps
+
+`lodestar/` is Lodestar Maps, the in-world map of Esteloria, a project of its own
+(Svelte and Vite, with MapLibre for its 3D view). `npm install` installs its
+dependencies too, and `npm run build` builds it into `dist/lodestar/`, so the
+site serves it at `/lodestar/`. `npm run dev:lodestar` runs it on its own;
+`lodestar/README.md` has the rest, its map generator included.
+
 ## The archive
 
 - **Cards** are grouped by release year, newest batch first, with a button to
