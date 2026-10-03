@@ -65,11 +65,11 @@ export function drawTile(ctx, world, tx, ty, z, state) {
   ctx.lineJoin = 'round';
   ctx.lineCap = 'round';
 
-  // land
-  ctx.beginPath();
-  for (const f of world.landIndex.query(qx0, qy0, qx1, qy1)) path(ctx, geo(f), ox, oy, s, true);
+  // land (kept, to keep the fields on it)
+  const land = new Path2D();
+  for (const f of world.landIndex.query(qx0, qy0, qx1, qy1)) path(land, geo(f), ox, oy, s, true);
   ctx.fillStyle = C.land;
-  ctx.fill('evenodd');
+  ctx.fill(land, 'evenodd');
 
   if (state.terrain && state.height) drawRelief(ctx, state.height, x0, y0, s);
 
@@ -77,6 +77,9 @@ export function drawTile(ctx, world, tx, ty, z, state) {
   if (z >= 4) {
     const fl = fieldsInBox(x0, y0, x1, y1);
     if (fl.length) {
+      // (a field's corners are on a coarser grid than the coast: what of it is out at sea is not drawn)
+      ctx.save();
+      ctx.clip(land, 'evenodd');
       for (let k = 0; k < FIELD.length; k++) {
         ctx.beginPath();
         let any = false;
@@ -107,6 +110,7 @@ export function drawTile(ctx, world, tx, ty, z, state) {
           ctx.restore();
         }
       }
+      ctx.restore();
     }
   }
 
