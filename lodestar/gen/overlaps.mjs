@@ -157,17 +157,31 @@ for (const q of pois) { const b = under(q.x, q.y); if (b) take(b); else lost.pus
 const autoPois = {};
 const CIVIC = { church: 'church', school: 'school' };
 let moved = 0, dropped = 0;
+// the nearest building with room, looked for further out until there is one (so a business whose
+// street lost its buildings moves up the road, instead of closing)
 for (const q of lost) {
   let best = null, bd = Infinity;
-  for (const b of liveNear(q.x, q.y, 0.15)) {
-    if (room(b) <= 0 || (CIVIC[b.kind] && CIVIC[b.kind] !== q.type)) continue;
-    const d = Math.hypot(b.cx - q.x, b.cy - q.y) * (b.kind === 'shop' || b.kind === 'row' ? 0.8 : 1);
-    if (d < bd && d < 0.15) { bd = d; best = b; }
+  for (const R of [0.15, 0.4, 1, 2]) {
+    for (const b of liveNear(q.x, q.y, R)) {
+      if (room(b) <= 0 || (CIVIC[b.kind] && CIVIC[b.kind] !== q.type)) continue;
+      const d = Math.hypot(b.cx - q.x, b.cy - q.y) * (b.kind === 'shop' || b.kind === 'row' ? 0.8 : 1);
+      if (d < bd && d < R) { bd = d; best = b; }
+    }
+    if (best) break;
+  }
+  // (none with room: it shares the nearest building that will take it, up to 5 km off)
+  if (!best) for (const R of [0.4, 1, 2, 5]) {
+    for (const b of liveNear(q.x, q.y, R)) {
+      if (CIVIC[b.kind] && CIVIC[b.kind] !== q.type) continue;
+      const d = Math.hypot(b.cx - q.x, b.cy - q.y) + (used.get(b) || 0) * 0.05;
+      if (d < bd && d < R) { bd = d; best = b; }
+    }
+    if (best) break;
   }
   if (best) { take(best); autoPois[q.id] = { x: +best.cx.toFixed(5), y: +best.cy.toFixed(5) }; moved++; }
   else { autoPois[q.id] = { del: true }; dropped++; }
 }
-log(`businesses: ${pois.length}, ${moved} moved onto a building, ${dropped} with none near removed`);
+log(`businesses: ${pois.length}, ${moved} moved onto a building, ${dropped} with no building within 5 km removed`);
 // TPF sites in towns (those without a compound of their own): the pin on a big building near
 // the site that no business is in (a block of flats, an industrial building or a terrace)
 await P.initExtras();
