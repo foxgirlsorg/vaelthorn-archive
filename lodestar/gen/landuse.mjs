@@ -19,6 +19,7 @@ const OUT = new URL('public/data/landuse/', ROOT);
 globalThis.fetch = async () => ({ json: async () => JSON.parse(fs.readFileSync(new URL('public/data/world.json', ROOT))) });
 const { loadWorld } = await import('../src/lib/world.js');
 const { h32 } = await import('../src/lib/town.js');
+const { inPoly } = await import('./lib/clash.mjs');
 const w = await loadWorld();
 const hm = JSON.parse(fs.readFileSync(new URL('public/data/height.json', ROOT)));
 const hb = fs.readFileSync(new URL('public/data/height.bin', ROOT));
@@ -310,7 +311,39 @@ function shoreStretch(c, len) {
 }
 const rectQ = (x, y, ux, uy, len, wid) => { const px = -uy * wid / 2, py = ux * wid / 2; return [[x - ux * len / 2 + px, y - uy * len / 2 + py], [x + ux * len / 2 + px, y + uy * len / 2 + py], [x + ux * len / 2 - px, y + uy * len / 2 - py], [x - ux * len / 2 - px, y - uy * len / 2 - py]]; };
 const allSea = (pts) => pts.every(([x, y]) => sea(x, y));
+// open water in front of a quay: the sea goes on well past its edge (not the head of an inlet or
+// a river's mouth, where a quay would fill the water and run into the town on the far shore)
+const openWater = (st, dep) => st.filter((v) => sea(v.x + v.nx * (dep + 0.4), v.y + v.ny * (dep + 0.4)) && sea(v.x + v.nx * (dep + 1), v.y + v.ny * (dep + 1))).length >= st.length * 0.9;
+// no road across it (a road over the water is a bridge or a causeway: the harbour goes elsewhere)
+function roadAcross(quay) {
+  const ring = quay.flat(), xs = quay.map((p) => p[0]), ys = quay.map((p) => p[1]);
+  const x0 = Math.min(...xs), y0 = Math.min(...ys), x1 = Math.max(...xs), y1 = Math.max(...ys);
+  for (const r of w.roadsIndex.query(x0, y0, x1, y1)) {
+    const q = r.p;
+    for (let i = 2; i < q.length; i += 2) {
+      const ax = q[i - 2], ay = q[i - 1], bx = q[i], by = q[i + 1], n = Math.ceil(Math.hypot(bx - ax, by - ay) / 0.02);
+      for (let k = 0; k <= n; k++) { const x = ax + ((bx - ax) * k) / n, y = ay + ((by - ay) * k) / n; if (x > x0 && x < x1 && y > y0 && y < y1 && inPoly(x, y, ring)) return true; }
+    }
+  }
+  return false;
+}
 const r4 = (q) => q.map(([x, y]) => [+x.toFixed(4), +y.toFixed(4)]);
+// A river may run out across a quay (it is drawn over it, so the quay lies either side of it): no
+// shed, container stack, crane or pier stands in its channel (as wide as the map draws it) or
+// within pad km of its banks
+function inRiver(pts, pad = 0.015) {
+  const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]), m = 0.35;
+  for (const r of w.riversIndex.query(Math.min(...xs) - m, Math.min(...ys) - m, Math.max(...xs) + m, Math.max(...ys) + m)) {
+    const half = Math.min(0.32, 0.00028 * Math.sqrt((r.a0 + r.a1 * 2) / 3)) / 2 + pad, q = r.p;
+    for (const [x, y] of pts) for (let i = 2; i < q.length; i += 2) {
+      const ax = q[i - 2], ay = q[i - 1], bx = q[i], by = q[i + 1], dx = bx - ax, dy = by - ay, l2 = dx * dx + dy * dy || 1e-12;
+      const t = Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / l2));
+      if (Math.hypot(ax + dx * t - x, ay + dy * t - y) < half) return true;
+    }
+  }
+  return false;
+}
+const withMid = (q) => [...q, [(q[0][0] + q[2][0]) / 2, (q[0][1] + q[2][1]) / 2]];
 const SPEC = { 3: { len: 2.4, dep: 0.34, berth: 0.26, pier: 0.18 }, 2: { len: 0.6, dep: 0.1, berth: 0.18, pier: 0.1 } };
 const ports = [];
 for (const p of w.places) {
@@ -322,10 +355,17 @@ for (const p of w.places) {
       // a fishing village's jetty
       const st = shoreStretch(c, 0.1);
       if (!st) continue;
+      // a landing along the shore (half on the land), the jetty out from it with a T at its end,
+      // and a boat shed on the landing
       const m = st[Math.floor(st.length / 2)], L = 0.1 + 0.06 * h32(Math.round(p.x * 100), Math.round(p.y * 100), 5);
       const q = rectQ(m.x + m.nx * (L / 2 - 0.01), m.y + m.ny * (L / 2 - 0.01), m.nx, m.ny, L, 0.012);
-      if (!allSea([q[1], q[2]])) continue;
-      port.piers.push(r4(q));
+      if (!allSea([q[1], q[2]]) || inRiver(withMid(q))) continue;
+      const land = rectQ(m.x + m.nx * 0.002, m.y + m.ny * 0.002, m.tx, m.ty, 0.06, 0.022);
+      const head = rectQ(m.x + m.nx * (L - 0.016), m.y + m.ny * (L - 0.016), m.tx, m.ty, 0.04, 0.01);
+      if (!allSea([head[0], head[1], head[2], head[3]]) || roadAcross(land)) continue;
+      port.quay = r4(land);
+      port.piers.push(r4(q), r4(head));
+      port.sheds.push(r4(rectQ(m.x - m.nx * 0.003 + m.tx * 0.017, m.y - m.ny * 0.003 + m.ty * 0.017, m.tx, m.ty, 0.018, 0.012)));
       ports.push(port);
       break;
     }
@@ -333,26 +373,31 @@ for (const p of w.places) {
     if (!st) continue;
     const inner = st.map((v) => [v.x - v.nx * 0.015, v.y - v.ny * 0.015]), outer = st.map((v) => [v.x + v.nx * S.dep, v.y + v.ny * S.dep]);
     if (!allSea(outer) || !allSea(st.map((v) => [v.x + v.nx * S.dep * 0.5, v.y + v.ny * S.dep * 0.5]))) continue;
-    port.quay = r4([...inner, ...outer.reverse()]);
-    outer.reverse();
+    if (!openWater(st, S.dep)) continue;
+    const quay = [...inner, ...[...outer].reverse()];
+    if (roadAcross(quay)) continue;
+    port.quay = r4(quay);
     // berths: piers off the quay's edge, a crane at the root of each
     const every = Math.round(S.berth / 0.05);
     for (let k = Math.floor(every / 2); k < st.length - 2; k += every) {
       const v = st[k], o = outer[k], q = rectQ(o[0] + v.nx * S.pier / 2, o[1] + v.ny * S.pier / 2, v.nx, v.ny, S.pier, size === 3 ? 0.035 : 0.022);
-      if (!allSea([q[1], q[2]])) continue;
+      if (!allSea([q[1], q[2]]) || inRiver(withMid(q))) continue;
       port.piers.push(r4(q));
-      port.cranes.push([+(o[0] - v.nx * 0.02).toFixed(4), +(o[1] - v.ny * 0.02).toFixed(4)]);
+      port.cranes.push([+(o[0] - v.nx * 0.02).toFixed(4), +(o[1] - v.ny * 0.02).toFixed(4)]); // (with its pier: out of the river too)
     }
     // warehouses behind the edge, and (a city's terminal) container stacks between them and the shore
     for (let k = 2; k < st.length - 2; k += size === 3 ? 4 : 3) {
       const v = st[k];
       if (h32(Math.round(v.x * 1000), Math.round(v.y * 1000), 9) < 0.25) continue;
-      port.sheds.push(r4(rectQ(v.x + v.nx * S.dep * 0.62, v.y + v.ny * S.dep * 0.62, v.tx, v.ty, 0.15, S.dep * 0.32)));
+      const q = rectQ(v.x + v.nx * S.dep * 0.62, v.y + v.ny * S.dep * 0.62, v.tx, v.ty, 0.15, S.dep * 0.32);
+      if (!inRiver(withMid(q))) port.sheds.push(r4(q));
     }
-    if (size === 3) for (let k = 1; k < st.length - 1; k++) for (const f of [0.18, 0.27]) {
-      const v = st[k];
-      if (h32(Math.round(v.x * 1000), Math.round(f * 100), 11) < 0.2) continue;
-      port.containers.push([r4(rectQ(v.x + v.nx * S.dep * f, v.y + v.ny * S.dep * f, v.tx, v.ty, 0.04, 0.022)), Math.floor(h32(Math.round(v.x * 1000), Math.round(v.y * 1000), 12) * 5)]);
+    // (a stack: two 12 m boxes end to end, four wide, 24 x 10 m; two to every 50 m of the quay, in rows)
+    if (size === 3) for (let k = 1; k < st.length - 1; k++) for (const f of [0.12, 0.17, 0.22, 0.27]) for (const a of [-0.0125, 0.0125]) {
+      const v = st[k], x = v.x + v.nx * S.dep * f + v.tx * a, y = v.y + v.ny * S.dep * f + v.ty * a;
+      if (h32(Math.round(x * 1000), Math.round(y * 1000), 11) < 0.2) continue;
+      const q = rectQ(x, y, v.tx, v.ty, 0.022, 0.01);
+      if (!inRiver(withMid(q), 0.01)) port.containers.push([r4(q), Math.floor(h32(Math.round(x * 1000), Math.round(y * 1000), 12) * 5)]);
     }
     ports.push(port);
     break;

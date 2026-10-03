@@ -82,7 +82,12 @@ log(`${farmHits} town buildings under farmsteads removed`);
 let yardHits = 0;
 const hitTown = (q) => { const xs = q.map((p) => p[0]), ys = q.map((p) => p[1]); for (const k of near([Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)])) if (!removed.has(all[k].id) && overlap(q, all[k].r)) { removed.add(all[k].id); yardHits++; } };
 for (const cp of P.compoundsInBox(-1e4, -1e4, 1e4, 1e4)) for (const q of cp.buildings) if (q.length === 4) hitTown(q);
-for (const pt of P.portsInBox(-1e4, -1e4, 1e4, 1e4)) for (const q of [...pt.piers, ...pt.sheds]) if (q.length === 4) hitTown(q);
+for (const pt of P.portsInBox(-1e4, -1e4, 1e4, 1e4)) {
+  for (const q of [...pt.piers, ...pt.sheds]) if (q.length === 4) hitTown(q);
+  // the quay itself (the shore along it, then its outer edge back): piece by piece, nothing of the
+  // town left half under it
+  if (pt.quay) { const Q = pt.quay, n = Q.length / 2; for (let k = 0; k + 1 < n; k++) hitTown([Q[k], Q[k + 1], Q[Q.length - 2 - k], Q[Q.length - 1 - k]]); }
+}
 log(`${yardHits} town buildings in compounds or harbours removed`);
 
 // buildings standing on a road, a street, a river, a lake, a pond or the sea

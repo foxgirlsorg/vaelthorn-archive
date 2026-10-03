@@ -141,8 +141,23 @@ export function drawTile(ctx, world, tx, ty, z, state) {
   ctx.fillStyle = C.water;
   ctx.fill('evenodd');
 
+  // built-up areas and streets
+  if (z >= 0.3) {
+    const rings = world.urbanIndex.query(qx0, qy0, qx1, qy1);
+    // (a town's ground is coarser than the shore: on the land only)
+    ctx.save();
+    ctx.clip(land, 'evenodd');
+    ctx.beginPath();
+    for (const r of rings) if (r.owner.big || z >= 2.2) path(ctx, r.p, ox, oy, s, true);
+    ctx.fillStyle = tz >= 6 ? '#fbfaf7' : z < 3 ? C.urban : C.urbanSmall;
+    ctx.fill('evenodd');
+    ctx.restore();
+    if (tz >= 6 && state.ch) state.town = drawTowns(ctx, world, rings, ox, oy, s, tz, qx0, qy0, qx1, qy1, state.ch, out, land);
+  }
+
   // harbours, out on the water: a quay along the shore with berths, cranes, warehouses and
-  // container stacks, or a village's jetty (gen/landuse.mjs)
+  // container stacks, or a village's jetty (gen/landuse.mjs). Over the town's ground (whose edge is
+  // coarser than the shore); a river is drawn over it, through its quay
   if (wz >= 5) {
     const P2 = (q) => { ctx.moveTo(q[0][0] * s - ox, q[0][1] * s - oy); for (let i = 1; i < q.length; i++) ctx.lineTo(q[i][0] * s - ox, q[i][1] * s - oy); ctx.closePath(); };
     for (const pt of portsInBox(x0, y0, x1, y1)) {
@@ -158,16 +173,6 @@ export function drawTile(ctx, world, tx, ty, z, state) {
         for (const [x, y] of pt.cranes) { const r = Math.max(1.5, 0.008 * s); ctx.fillRect(x * s - ox - r, y * s - oy - r, r * 2, r * 2); }
       }
     }
-  }
-
-  // built-up areas and streets
-  if (z >= 0.3) {
-    const rings = world.urbanIndex.query(qx0, qy0, qx1, qy1);
-    ctx.beginPath();
-    for (const r of rings) if (r.owner.big || z >= 2.2) path(ctx, r.p, ox, oy, s, true);
-    ctx.fillStyle = tz >= 6 ? '#fbfaf7' : z < 3 ? C.urban : C.urbanSmall;
-    ctx.fill('evenodd');
-    if (tz >= 6 && state.ch) state.town = drawTowns(ctx, world, rings, ox, oy, s, tz, qx0, qy0, qx1, qy1, state.ch, out);
   }
 
   // TPF compounds: cleared, fenced yard and buildings
@@ -260,7 +265,7 @@ export function drawTile(ctx, world, tx, ty, z, state) {
   if (town) town.roundabouts();
 
   if (state.town) {
-    if (state.town.names.length) drawStreetNames(ctx, state.town.names, ox, oy, s, tz);
+    if (state.town.names.length) drawStreetNames(ctx, state.town.names, ox, oy, s, tz, land);
     if (state.town.pois.length) drawPois(ctx, ox, oy, z, tz, out);
     state.town = null;
   }
@@ -433,7 +438,7 @@ const BUILD_EDGE = 'rgba(190,193,200,.9)';
 // buildings show from the 500 m scale bar (map zoom 7, town zoom 7 + TZ ≈ 8.6)
 const BUILD_Z = 8.5;
 
-function drawTowns(ctx, world, rings, ox, oy, s, z, x0, y0, x1, y1, CH, out) {
+function drawTowns(ctx, world, rings, ox, oy, s, z, x0, y0, x1, y1, CH, out, land) {
   const owners = new Set();
   for (const r of rings) if (r.owner.place) owners.add(r.owner);
   const P = (x, y) => [x * s - ox, y * s - oy];
@@ -496,7 +501,9 @@ function drawTowns(ctx, world, rings, ox, oy, s, z, x0, y0, x1, y1, CH, out) {
   // so the pieces stored per chunk are joined end to end first.
   const lines = joinStreets(z >= 8 ? [...streets, ...mains] : mains);
   const ends = deadEnds(lines, world.roadsIndex.query(x0, y0, x1, y1));
+  // (a town's streets on the land only: none runs out over the sea)
   const streetPass = (pass) => {
+    ctx.save(); ctx.clip(land, 'evenodd');
     ctx.lineCap = 'butt'; ctx.lineJoin = 'round';
     for (const st of lines) {
       ctx.beginPath(); line(st.pts);
@@ -509,6 +516,7 @@ function drawTowns(ctx, world, rings, ox, oy, s, z, x0, y0, x1, y1, CH, out) {
       ctx.beginPath(); ctx.arc(X, Y, (wpx(st.w) + (pass === 0 ? (z >= 10 ? 2 : 1.2) : 0)) / 2, 0, Math.PI * 2);
       ctx.fillStyle = pass === 0 ? '#dad3c6' : st.main ? '#fffaf0' : '#ffffff'; ctx.fill();
     }
+    ctx.restore();
   };
   const roundabouts = () => {
     for (const r of rounds) {
@@ -610,8 +618,8 @@ export function drawPoi(ctx, { q, r, tw }, X, Y, z) {
   ctx.textBaseline = 'alphabetic';
 }
 
-function drawStreetNames(ctx, streets, ox, oy, s, z) {
-  const boxes = [], seen = new Set();
+function drawStreetNames(ctx, streets, ox, oy, s, z, land) {
+  const boxes = [], seen = new Set(), T = ctx.getTransform();
   ctx.font = `500 ${z >= 11 ? 12 : 10.5}px ${FONT}`;
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   for (const st of streets) {
@@ -641,6 +649,7 @@ function drawStreetNames(ctx, streets, ox, oy, s, z) {
     if (mx - ex < 0 || mx + ex > 256 || my - ey < 0 || my + ey > 256) continue;
     const box = [mx - ex - 10, my - ey - 10, mx + ex + 10, my + ey + 10];
     if (boxes.some((o) => !(o[2] < box[0] || o[0] > box[2] || o[3] < box[1] || o[1] > box[3]))) continue;
+    { const c = T.transformPoint({ x: mx, y: my }); if (!ctx.isPointInPath(land, c.x, c.y, 'evenodd')) continue; } // (not on the water)
     boxes.push(box); seen.add(st.name + (st.main ? 'm' : ''));
     ctx.save(); ctx.translate(mx, my); ctx.rotate(ang);
     ctx.strokeStyle = 'rgba(255,255,255,0.95)'; ctx.lineWidth = 3; ctx.strokeText(st.name, 0, 0.5);
